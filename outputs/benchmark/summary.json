@@ -1,0 +1,79 @@
+{
+  "benchmark": "HorizonMath",
+  "set": "calibration (solvability=0)",
+  "total": 10,
+  "passed": 10,
+  "required_digits": 20,
+  "results": [
+    {
+      "id": "w4_watson_integral",
+      "domain": "statistical_mechanics",
+      "success": true,
+      "matching_digits": 100,
+      "required": 20
+    },
+    {
+      "id": "box_integral_b5_neg2",
+      "domain": "special_functions",
+      "success": true,
+      "matching_digits": 99,
+      "required": 20
+    },
+    {
+      "id": "elliptic_k_moment_3",
+      "domain": "special_functions",
+      "success": true,
+      "matching_digits": 99,
+      "required": 20
+    },
+    {
+      "id": "elliptic_k2_e_moment",
+      "domain": "special_functions",
+      "success": true,
+      "matching_digits": 100,
+      "required": 20
+    },
+    {
+      "id": "airy_moment_a4",
+      "domain": "special_functions",
+      "success": true,
+      "matching_digits": 99,
+      "required": 20
+    },
+    {
+      "id": "central_binomial_s5",
+      "domain": "number_theory",
+      "success": true,
+      "matching_digits": 100,
+      "required": 20
+    },
+    {
+      "id": "resultant_chebyshev",
+      "domain": "special_functions",
+      "success": true,
+      "matching_digits": 105,
+      "required": 20
+    },
+    {
+      "id": "mzv_reduction_zeta_3_3_3",
+      "domain": "number_theory",
+      "success": true,
+      "matching_digits": 100,
+      "required": 20
+    },
+    {
+      "id": "stieltjes_gamma_1",
+      "domain": "number_theory",
+      "success": true,
+      "matching_digits": 99,
+      "required": 20
+    },
+    {
+      "id": "mahler_x_3_y_3_1_5xy",
+      "domain": "number_theory",
+      "success": true,
+      "matching_digits": 100,
+      "required": 20
+    }
+  ]
+}
