@@ -1,0 +1,10 @@
+{
+  "problem_index": 30,
+  "problem_title": "mzv_reduction_zeta_3_3_3",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "0.012034182574412003861599684421693740505784954499279660274108607505043368975229...",
+  "actual_value": "0.012034182574412003861599684421693740505784954499279660274108607505043368975229...",
+  "matching_digits": 100
+}
