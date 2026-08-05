@@ -1,0 +1,10 @@
+{
+  "problem_index": 0,
+  "problem_title": "w4_watson_integral",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "0.309866780462120428169674416214750177538322267290439664238350462679070334663890...",
+  "actual_value": "0.309866780462120428169674416214750177538322267290439664238350462679070334663890...",
+  "matching_digits": 100
+}
