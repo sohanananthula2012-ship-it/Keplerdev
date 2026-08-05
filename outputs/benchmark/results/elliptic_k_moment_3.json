@@ -1,0 +1,10 @@
+{
+  "problem_index": 9,
+  "problem_title": "elliptic_k_moment_3",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "7.090227004846269460989802370059549252452418547658417986558715804114584634786178...",
+  "actual_value": "7.090227004846269460989802370059549252452418547658417986558715804114584634786178...",
+  "matching_digits": 99
+}
