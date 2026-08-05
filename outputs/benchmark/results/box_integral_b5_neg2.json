@@ -1,0 +1,10 @@
+{
+  "problem_index": 8,
+  "problem_title": "box_integral_b5_neg2",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "0.765600880600350420483135920417467905979162351315783952151895289530208524430350...",
+  "actual_value": "0.765600880600350420483135920417467905979162351315783952151895289530208524430350...",
+  "matching_digits": 99
+}
