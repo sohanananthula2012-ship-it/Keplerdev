@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HorizonMath Calibration Report</title>
+<script>
+window.MathJax = {
+  tex: {inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']]},
+  svg: {fontCache: 'global'}
+};
+</script>
+<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a;
+         font-size: 10.5pt; line-height: 1.5; max-width: 100%; }
+  h1 { font-size: 21pt; color: #0b3d61; border-bottom: 3px solid #0b3d61;
+       padding-bottom: 6px; margin-bottom: 4px; }
+  h2 { font-size: 14pt; color: #0b3d61; margin-top: 22px;
+       border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; }
+  h3 { font-size: 12pt; color: #164e63; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 9.5pt; }
+  th, td { border: 1px solid #cbd5e1; padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: #0b3d61; color: #fff; font-weight: 600; }
+  tr:nth-child(even) td { background: #f1f5f9; }
+  code { background: #eef2f7; padding: 1px 4px; border-radius: 3px;
+         font-family: 'SFMono-Regular', Consolas, monospace; font-size: 9pt; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px;
+        overflow-x: auto; font-size: 8.8pt; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  strong { color: #0b3d61; }
+  hr { border: none; border-top: 1px solid #cbd5e1; margin: 18px 0; }
+  ul, ol { margin: 6px 0 6px 18px; }
+  li { margin: 3px 0; }
+</style>
+</head>
+<body>
+<h1 id="horizonmath-benchmark-calibration-run-report">HorizonMath Benchmark — Calibration Run Report</h1>
+<p><strong>Agent:</strong> Kepler Agent
+<strong>Benchmark:</strong> HorizonMath (ewang26/HorizonMath), 113 research-math problems across 8 domains
+<strong>Subset run:</strong> Calibration set — <code>solvability == 0</code> (10 problems with known ground-truth constants)
+<strong>Evaluation mode:</strong> <code>ground_truth_computable</code> (numeric), scored by matching significant digits
+<strong>Pass threshold:</strong> 20 matching digits (evaluator default <code>DEFAULT_REQUIRED_DIGITS = 20</code>)
+<strong>Harness:</strong> <code>scripts/evaluate.py --problem-id &lt;id&gt; --json</code> (real HorizonMath evaluator, unmodified)</p>
+<hr />
+<h2 id="1-headline-result">1. Headline result</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Problems attempted</td>
+<td>10 / 10</td>
+</tr>
+<tr>
+<td><strong>Problems passed (≥20 digits)</strong></td>
+<td><strong>10 / 10 (100%)</strong></td>
+</tr>
+<tr>
+<td>Minimum matching digits achieved</td>
+<td>99</td>
+</tr>
+<tr>
+<td>Maximum matching digits achieved</td>
+<td>105</td>
+</tr>
+<tr>
+<td>Extraction / execution / scoring failures</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Every calibration problem was solved to <strong>99–105 matching significant digits</strong>, roughly 5× the 20-digit pass bar. The pipeline (extraction → sandboxed execution → digit scoring) is fully validated end-to-end.</p>
+<h2 id="2-score-by-domain">2. Score by domain</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Problems</th>
+<th>Solved</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>number_theory</td>
+<td>4</td>
+<td>4</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>special_functions</td>
+<td>5</td>
+<td>5</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>statistical_mechanics</td>
+<td>1</td>
+<td>1</td>
+<td>100%</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td><strong>10</strong></td>
+<td><strong>10</strong></td>
+<td><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-per-problem-breakdown">3. Per-problem breakdown</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Problem ID</th>
+<th>Domain</th>
+<th>Method used</th>
+<th>Matching digits</th>
+<th>Pass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>w4_watson_integral</code></td>
+<td>statistical_mechanics</td>
+<td>Bessel single-integral identity $W_4=\int_0^\infty e^{-4t}I_0(t)^4\,dt$</td>
+<td>100</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>box_integral_b5_neg2</code></td>
+<td>special_functions</td>
+<td>Schwinger trick → 1-D integral of $\big(\tfrac12\sqrt{\pi/t}\,\mathrm{erf}\sqrt t\big)^5$</td>
+<td>99</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>elliptic_k_moment_3</code></td>
+<td>special_functions</td>
+<td>High-precision quadrature $\int_0^1 K(k)^3\,dk$</td>
+<td>99</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>elliptic_k2_e_moment</code></td>
+<td>special_functions</td>
+<td>High-precision quadrature $\int_0^1 K(k)^2E(k)\,dk$</td>
+<td>100</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>airy_moment_a4</code></td>
+<td>special_functions</td>
+<td><strong>Closed form</strong> $a_4=\ln 3/(24\pi^2)$ (DLMF 9.11)</td>
+<td>99</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>central_binomial_s5</code></td>
+<td>number_theory</td>
+<td>Direct series $\sum 1/(n^5\binom{2n}{n})$</td>
+<td>100</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>resultant_chebyshev</code></td>
+<td>special_functions</td>
+<td><strong>Exact</strong> $\mathrm{Res}=2^{29\cdot20}\prod_j P_{20}(\cos\tfrac{(2j-1)\pi}{60})$</td>
+<td>105</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>mzv_reduction_zeta_3_3_3</code></td>
+<td>number_theory</td>
+<td><strong>Closed form</strong> via Newton's identities: $\zeta(3,3,3)=e_3$ of ${n^{-3}}$</td>
+<td>100</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>stieltjes_gamma_1</code></td>
+<td>number_theory</td>
+<td>Special-function value <code>mpmath.stieltjes(1)</code></td>
+<td>99</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>mahler_x_3_y_3_1_5xy</code></td>
+<td>number_theory</td>
+<td>Jensen reduction: $m=\frac{1}{2\pi}\int_0^{2\pi}\sum_j\log^+</td>
+<td>y_j(\theta)</td>
+<td>\,d\theta$</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-method-notes-per-problem">4. Method notes (per problem)</h2>
+<ul>
+<li><strong>W₄ (Watson integral):</strong> The $d$-fold angular integral collapses to a single integral using
+  $(1/\pi)\int_0^\pi e^{t\cos x}\,dx = I_0(t)$, giving $W_4=\int_0^\infty e^{-4t}I_0(t)^4\,dt$. The integrand decays like $1/(4\pi^2 t^2)$, so quadrature converges cleanly.</li>
+<li><strong>B₅(−2):</strong> For $s=-2$, $|x|^{-2}=\int_0^\infty e^{-t|x|^2}\,dt$ (Gamma/Schwinger representation with $\Gamma(1)=1$). The 5-D box integral factorizes into a <strong>single</strong> 1-D integral of $\big(\int_0^1 e^{-tu^2}du\big)^5$, avoiding a 5-D cubature.</li>
+<li><strong>∫K³, ∫K²E:</strong> Modulus convention — the problem's $K(k),E(k)$ map to <code>mpmath.ellipk(k**2)</code>, <code>ellipe(k**2)</code>. Endpoint log-singularities at $k=1$ are integrable and handled by tanh–sinh quadrature.</li>
+<li><strong>a₄:</strong> Genuine closed form $\ln 3/(24\pi^2)$ from DLMF §9.11 (products of Airy functions).</li>
+<li><strong>S₅:</strong> Rapidly convergent series (central binomial in denominator), summed directly with <code>nsum</code>.</li>
+<li><strong>Res(T₃₀,P₂₀):</strong> Exact algebraic evaluation. Roots of $T_{30}$ are the explicit cosines $\cos\frac{(2j-1)\pi}{60}$ and $\mathrm{lc}(T_{30})=2^{29}$, so the resultant is a finite product with no numerical root-finding.</li>
+<li><strong>ζ(3,3,3):</strong> Genuine <strong>reduction to single zetas</strong>. An all-equal-argument MZV equals the elementary symmetric function $e_k$ of ${1/n^3}$; Newton's identities with power sums $p_j=\zeta(3j)$ give
+  $\zeta(3,3,3)=\big[\tfrac{\zeta(3)^2-\zeta(6)}{2}\zeta(3)-\zeta(3)\zeta(6)+\zeta(9)\big]/3$.</li>
+<li><strong>γ₁:</strong> <code>mpmath.stieltjes(1)</code> — the first Stieltjes constant, a built-in special value.</li>
+<li><strong>Mahler measure:</strong> Jensen's formula reduces the torus double integral to a 1-D integral of $\sum_j\log^+|y_j(\theta)|$ over roots of the monic cubic $y^3-5e^{i\theta}y+(e^{3i\theta}+1)$. No root crosses $|y|=1$, so the integrand is smooth and quadrature reaches full precision.</li>
+</ul>
+<h2 id="5-comparison-to-frontier-baselines">5. Comparison to frontier baselines</h2>
+<p>The benchmark-harness reference places the best frontier models <strong>under ~10%</strong> on HorizonMath overall (the full set is dominated by hard/open problems). The calibration subset (<code>solvability=0</code>) is the <em>easy, ground-truth-known</em> slice designed to validate the pipeline; a 100% pass here is the expected target for a correctly functioning agent and confirms Kepler's numeric/closed-form machinery is sound before tackling the <code>solvability=1–3</code> research problems.</p>
+<table>
+<thead>
+<tr>
+<th>Benchmark slice</th>
+<th>Frontier (reported)</th>
+<th>Kepler (this run)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HorizonMath — calibration (solvability=0, n=10)</td>
+<td>pipeline-validation slice</td>
+<td><strong>100% (10/10)</strong></td>
+</tr>
+<tr>
+<td>HorizonMath — full (n=113)</td>
+<td>&lt; ~10% (est.)</td>
+<td>not yet run</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-failure-analysis">6. Failure analysis</h2>
+<p>No failures on this subset. The genuine difficulty of HorizonMath lives in the <code>solvability=1–3</code> problems, not calibration. Two forward-looking observations:</p>
+<ol>
+<li><strong>Compliance layer (not triggered here).</strong> The evaluator ships an <em>LLM-based compliance checker</em> (<code>evaluator/compliance.py</code>) that flags solutions relying on numerical integration, truncated series, or numerical root-finding rather than genuine closed forms. The numeric CLI scoring path used here does <strong>not</strong> invoke it, so all 10 pass on digit-matching alone. However, on a compliance-audited run, problems 1–4, 6, and 10 (integrals/series/root-finding) would need genuine symbolic closed forms to be counted "compliant." Problems 5, 7, 8, and 9 already use genuine closed forms / exact algebra / special values. This is the main gap to close for the harder tiers.</li>
+<li><strong>Precision headroom.</strong> All solutions were computed at <code>mp.dps = 100–120</code>, delivering ~2.5× the required precision margin, so there is no risk of borderline digit loss.</li>
+</ol>
+<h2 id="7-reproducibility">7. Reproducibility</h2>
+<ul>
+<li>Solutions: <code>outputs/benchmark/{id}.py</code> — each defines <code>proposed_solution()</code> returning an <code>mpmath</code> value.</li>
+<li>Raw evaluator output: <code>outputs/benchmark/results/{id}.json</code>.</li>
+<li>Aggregate: <code>outputs/benchmark/summary.json</code>.</li>
+<li>Re-run a single problem:
+  <code>bash
+  python3 scripts/evaluate.py --llm-output outputs/benchmark/&lt;id&gt;.py --problem-id &lt;id&gt; --json</code>
+  (Requires <code>mpmath</code>; the evaluator package also imports <code>openai</code> and <code>google-genai</code> at init for its compliance module.)</li>
+</ul>
+<h2 id="8-recommendation">8. Recommendation</h2>
+<p>The pipeline is validated at 100% on calibration. Next step: run <code>solvability=1–2</code> and, for a compliance-clean score, prioritize genuine closed-form derivations (symbolic/<code>sympy</code>, known special-value identities) over high-precision numerical evaluation of definitions.</p>
+</body>
+</html>
