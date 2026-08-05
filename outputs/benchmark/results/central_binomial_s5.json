@@ -1,0 +1,10 @@
+{
+  "problem_index": 14,
+  "problem_title": "central_binomial_s5",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "0.505429474683519241642450481908432149188669014568262864982664712875733473376175...",
+  "actual_value": "0.505429474683519241642450481908432149188669014568262864982664712875733473376175...",
+  "matching_digits": 100
+}
