@@ -1,0 +1,10 @@
+{
+  "problem_index": 41,
+  "problem_title": "mahler_x_3_y_3_1_5xy",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "1.592368561086457755264876201658434396693198650656898062846602587106653142692188...",
+  "actual_value": "1.592368561086457755264876201658434396693198650656898062846602587106653142692188...",
+  "matching_digits": 100
+}
