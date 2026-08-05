@@ -1,0 +1,10 @@
+{
+  "problem_index": 31,
+  "problem_title": "stieltjes_gamma_1",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "-0.07281584548367672486058637587490131913773633833433795259900655974140143357151...",
+  "actual_value": "-0.07281584548367672486058637587490131913773633833433795259900655974140143357151...",
+  "matching_digits": 99
+}
