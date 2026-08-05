@@ -1,0 +1,10 @@
+{
+  "problem_index": 12,
+  "problem_title": "airy_moment_a4",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "0.004638029060494605728744364121001506901719502223036691156464317064428976613336...",
+  "actual_value": "0.004638029060494605728744364121001506901719502223036691156464317064428976613336...",
+  "matching_digits": 99
+}
