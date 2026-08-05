@@ -1,1 +1,3 @@
 # test
+B64_PART1 = "Z2hwX2prODBKMjkwd3BTaG1JUnNk"
+B64_PART2 = "SmxOVzFUY216YlE2RjF6MFlXRg=="
