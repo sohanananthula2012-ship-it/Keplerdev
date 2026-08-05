@@ -1,0 +1,10 @@
+{
+  "problem_index": 11,
+  "problem_title": "elliptic_k2_e_moment",
+  "success": true,
+  "error_type": null,
+  "error_message": null,
+  "expected_value": "4.726818003230846307326534913373032834968279031772278657705810536076389756524119...",
+  "actual_value": "4.726818003230846307326534913373032834968279031772278657705810536076389756524119...",
+  "matching_digits": 100
+}
