@@ -1,0 +1,3 @@
+✗ INVALID [39] sum_three_cubes_627
+      Problem ID: sum_three_cubes_627
+      Message: Failed: (0)³ + (0)³ + (0)³ = 0 ≠ 627
