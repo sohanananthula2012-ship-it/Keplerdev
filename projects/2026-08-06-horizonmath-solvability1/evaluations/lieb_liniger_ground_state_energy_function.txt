@@ -1,0 +1,2 @@
+✓ PASS [98] lieb_liniger_ground_state_energy_function
+      Matching digits: 28
