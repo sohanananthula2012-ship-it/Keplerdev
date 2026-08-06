@@ -1,0 +1,8 @@
+✓ VALID [73] tammes_n15
+      Problem ID: tammes_n15
+      Message: Tammes configuration for n=15: min distance = 0.8976896258, angular separation = 53.3392°
+      Metrics: num_points=15, min_distance=0.8976896258411617, angular_separation_degrees=53.33918494546194
+      Baseline: below_baseline
+        Achieved: 53.33918494546194
+        Baseline: 53.657850129932676 (maximize)
+        Improvement: -0.59%
