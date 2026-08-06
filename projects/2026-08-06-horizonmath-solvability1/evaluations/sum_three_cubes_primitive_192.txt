@@ -1,0 +1,3 @@
+✗ INVALID [40] sum_three_cubes_primitive_192
+      Problem ID: sum_three_cubes_primitive_192
+      Message: Failed: (0)³ + (0)³ + (0)³ = 0 ≠ 192
