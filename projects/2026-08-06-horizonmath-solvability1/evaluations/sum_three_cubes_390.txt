@@ -1,0 +1,3 @@
+✗ INVALID [38] sum_three_cubes_390
+      Problem ID: sum_three_cubes_390
+      Message: Failed: (0)³ + (0)³ + (0)³ = 0 ≠ 390
