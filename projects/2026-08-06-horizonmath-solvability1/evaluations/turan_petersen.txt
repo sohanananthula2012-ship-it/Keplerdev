@@ -1,0 +1,8 @@
+✓ VALID [85] turan_petersen
+      Problem ID: turan_petersen
+      Message: Graph matches K2 ∇ K_{a,b} form (Petersen-free) with 673 edges
+      Metrics: num_vertices=50, number_of_edges=673
+      Baseline: matches_baseline
+        Achieved: 673.0
+        Baseline: 673.0 (maximize)
+        Improvement: 0.0%
