@@ -1,0 +1,2 @@
+✓ PASS [105] thermal_boson_function_jb
+      Matching digits: 89
