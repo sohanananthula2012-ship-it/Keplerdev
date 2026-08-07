@@ -81,7 +81,7 @@ def solve_template(template, n_starts, rng):
     for _ in range(n_starts):
         v0 = rng.uniform(0.02, 0.5, size=ntot)
         res = minimize(neg_minarea, v0, args=(template,), method="Nelder-Mead",
-                       options={"maxiter": 20000, "xatol": 1e-12, "fatol": 1e-14})
+                       options={"maxiter": 3000, "xatol": 1e-12, "fatol": 1e-14})
         val = -res.fun
         if val > best[0]:
             pts = expand(unpack(res.x, template))
