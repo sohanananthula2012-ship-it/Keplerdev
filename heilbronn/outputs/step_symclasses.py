@@ -20,18 +20,16 @@ from scipy.optimize import minimize
 import json, sys, time
 
 N = 12
-TRIS = list(combinations(range(N), 3))
+_T = np.array(list(combinations(range(N), 3)))
+_I, _J, _K = _T[:, 0], _T[:, 1], _T[:, 2]
 REC = 0.0325988586918197
 
 
 def min_area(pts):
-    m = 1e9
-    for i, j, k in TRIS:
-        a = 0.5*abs((pts[j, 0]-pts[i, 0])*(pts[k, 1]-pts[i, 1]) -
-                    (pts[k, 0]-pts[i, 0])*(pts[j, 1]-pts[i, 1]))
-        if a < m:
-            m = a
-    return m
+    pts = np.asarray(pts)
+    p1, p2, p3 = pts[_I], pts[_J], pts[_K]
+    cross = (p2[:, 0]-p1[:, 0])*(p3[:, 1]-p1[:, 1]) - (p3[:, 0]-p1[:, 0])*(p2[:, 1]-p1[:, 1])
+    return float(0.5*np.abs(cross).min())
 
 
 def expand_C2(v):
@@ -89,12 +87,10 @@ def search(name, n_starts, rng, warm=None):
             v0 = np.clip(v0, 0, 1)
         else:
             v0 = rng.uniform(0, 1, size=nd)
-        # two-stage: Nelder-Mead then Powell refine
+        # single-stage Nelder-Mead (fast); restart-driven global search
         r1 = minimize(neg, v0, args=(exp,), method="Nelder-Mead",
-                      options={"maxiter": 6000, "xatol": 1e-12, "fatol": 1e-15})
-        r2 = minimize(neg, r1.x, args=(exp,), method="Powell",
-                      options={"maxiter": 6000, "xtol": 1e-12, "ftol": 1e-15})
-        v = r2.x if -r2.fun > -r1.fun else r1.x
+                      options={"maxiter": 4000, "xatol": 1e-11, "fatol": 1e-14})
+        v = r1.x
         val = min_area(np.clip(exp(v), 0, 1))
         if val > best[0]:
             best = (val, np.clip(exp(v), 0, 1))
