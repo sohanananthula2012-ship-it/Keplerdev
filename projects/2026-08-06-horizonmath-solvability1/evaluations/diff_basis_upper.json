@@ -1,0 +1,23 @@
+{
+  "problem_id": "diff_basis_upper",
+  "problem_index": 78,
+  "problem_title": "diff_basis_upper",
+  "valid": true,
+  "validator_message": "Verified difference basis for n=49109: |B|=360, |B|^2/n = 2.639027",
+  "validator_metrics": {
+    "n": 49109,
+    "basis_size": 360,
+    "ratio": 2.639027469506608
+  },
+  "baseline_comparison": {
+    "result": "below_baseline",
+    "achieved_value": 2.639027469506608,
+    "baseline_value": 2.639,
+    "direction": "minimize",
+    "metric_name": "Upper bound on the limit constant C = lim Delta(n)^2/n for difference bases",
+    "improvement_percent": -0.0,
+    "notes": null
+  },
+  "error_type": null,
+  "error_message": null
+}
