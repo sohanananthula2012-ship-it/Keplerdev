@@ -25,12 +25,19 @@ n=7; Dehbi–Zeng 2022 n=8). **Fully open-source pipeline — no commercial solv
 - Turning on **OBBT + aggressive separation/presolve** dropped the dual bound to
   the true value and **certified n=8 in 209 s** — a decisive improvement.
 
-## In progress / frontier
-- **n=9** (aggressive, ≤6 h) running on Daytona — would reproduce the 2026
-  Gurobi certification (n=9 in ~15 min there) with open-source tools.
-- **n=10, 11** are the genuinely OPEN frontier (only n≤9 ever certified in the
-  literature). Certifying n=10 would be a NEW result; reachability with SCIP on
-  1 CPU is uncertain.
+## The wall: n=9 is beyond open-source SCIP
+- **n=9 (aggressive, OBBT+cuts): dual bound frozen at 0.0558542** (the trivial
+  z-box bound) across ~39,000 nodes / 427 s — it never tightens, and no strong
+  primal is found. The McCormick relaxation is simply too weak for SCIP to prove
+  the bound here. n=9 needed **Gurobi** (~15 min) in the reference paper.
+- Free-tier note: the Daytona box auto-stops after ~40 min of active runtime, so
+  even a lucky long n=9 solve couldn't finish unattended.
+- **Definitive open-source frontier here: n ≤ 8 certified.**
+
+## Genuinely open frontier (needs a stronger solver)
+- **n=10, n=11** have NEVER been certified in the literature (only n≤9, via
+  Gurobi). Certifying n=10 would be a NEW result — but it requires Gurobi/BARON
+  (and for n≥10 likely new methodology), not open-source SCIP on 1 CPU.
 - **n=12 certification remains far beyond reach.**
 
 ## Beat-search outcome (parallel track)
