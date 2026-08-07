@@ -1,0 +1,27 @@
+{
+  "problem_id": "heilbronn_n12",
+  "problem_index": 74,
+  "problem_title": "heilbronn_n12",
+  "valid": true,
+  "validator_message": "Heilbronn configuration for n=12: minimum triangle area = 0.0325988587",
+  "validator_metrics": {
+    "num_points": 12,
+    "min_triangle_area": 0.03259885869181968,
+    "worst_triangle": [
+      0,
+      8,
+      11
+    ]
+  },
+  "baseline_comparison": {
+    "result": "matches_baseline",
+    "achieved_value": 0.03259885869181968,
+    "baseline_value": 0.0325988586918197,
+    "direction": "maximize",
+    "metric_name": "minimum area of any triangle formed by three of the points",
+    "improvement_percent": 0.0,
+    "notes": null
+  },
+  "error_type": null,
+  "error_message": null
+}

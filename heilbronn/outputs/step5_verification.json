@@ -1,0 +1,12 @@
+{
+  "min_area_float64": 0.03259885869181968,
+  "min_area_mpmath": "0.03259885869181968360346414",
+  "in_bounds": true,
+  "worst_triangle": [
+    0,
+    8,
+    11
+  ],
+  "exceeds_0_0307": true,
+  "exceeds_record": false
+}
