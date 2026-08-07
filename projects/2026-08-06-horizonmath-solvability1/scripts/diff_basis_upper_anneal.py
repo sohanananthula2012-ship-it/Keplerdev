@@ -4,71 +4,62 @@ B=[0,1,70,83,255,297,384,391,550,555,647,656,710,996,1020,1232,1257,1272,1452,14
 m=89**2+89+1
 L=sorted({a*m+b for a in A for b in B})
 M=len(L)
-DCAP=70000
-TARGET=49110  # need first_gap-1 >= 49110 i.e. cover 1..49110 with 360 pts
-
+DCAP=80000
+SCAN=60000
 def build_cnt(pts):
-    cnt=np.zeros(DCAP+2,dtype=np.int32)
-    a=np.array(pts,dtype=np.int64)
+    cnt=np.zeros(DCAP+2,dtype=np.int64)
+    a=np.array(sorted(pts),dtype=np.int64)
     for i in range(len(a)):
-        d=np.abs(a[i]-a).astype(np.int64)
-        d=d[d>0]
-        d=d[d<=DCAP]
+        d=a[i+1:]-a[i]; d=d[d<=DCAP]
         np.add.at(cnt,d,1)
     return cnt
 def first_gap(cnt):
-    z=np.flatnonzero(cnt[1:TARGET+50]==0)
-    return int(z[0])+1 if len(z) else TARGET+50
+    z=np.flatnonzero(cnt[1:SCAN]==0)
+    return int(z[0])+1 if len(z) else SCAN
+def brute_cov_n(pts):
+    pts=sorted(set(pts)); cov=set()
+    for i in range(len(pts)):
+        ai=pts[i]
+        for j in range(i+1,len(pts)): cov.add(pts[j]-ai)
+    v=1
+    while v in cov: v+=1
+    return v-1
 
-pts=list(L)
-pts_set=set(pts)
-cnt=build_cnt(pts)
-fg=first_gap(cnt); n=fg-1
-print("seed n=",n,"ratio=",M*M/n,flush=True)
-
+TLIMIT=float(sys.argv[1]) if len(sys.argv)>1 else 600.0
+seed=int(sys.argv[2]) if len(sys.argv)>2 else 12345
+random.seed(seed)
+pts=list(L); pts_set=set(pts)
+cnt=build_cnt(pts); fg=first_gap(cnt); n=fg-1
 arr=np.array(pts,dtype=np.int64)
 best_n=n; best_pts=list(pts)
-random.seed(12345)
-t0=time.time()
-TLIMIT=float(sys.argv[1]) if len(sys.argv)>1 else 600.0
-it=0
-T=3.0
+print("seed n=",n,"ratio=",M*M/n,flush=True)
+t0=time.time(); it=0; T=2.5
 while time.time()-t0<TLIMIT:
     it+=1
-    if it%200000==0:
-        T=max(0.05,T*0.97)
-    i=random.randrange(M)
-    old=int(arr[i])
-    # choose proposal
+    if it%300000==0: T=max(0.05,T*0.95)
+    i=random.randrange(M); old=int(arr[i])
     r=random.random()
-    if r<0.5:
-        # targeted: create difference = fg (current first gap) via some anchor
-        g=fg
-        q=int(arr[random.randrange(M)])
-        cand=q+g if random.random()<0.5 else q-g
-    elif r<0.8:
-        cand=old+random.randint(-30,30)
+    if r<0.55:
+        g=fg; q=int(arr[random.randrange(M)]); cand=q+g if random.random()<0.5 else q-g
+    elif r<0.85:
+        cand=old+random.randint(-40,40)
     else:
         cand=random.randint(0,DCAP)
-    if cand<0 or cand>DCAP or cand in pts_set or cand==old:
-        continue
+    if cand<0 or cand>DCAP or cand in pts_set or cand==old: continue
     others=np.delete(arr,i)
     dold=np.abs(old-others); dold=dold[(dold>0)&(dold<=DCAP)]
     dnew=np.abs(cand-others); dnew=dnew[(dnew>0)&(dnew<=DCAP)]
-    np.add.at(cnt,dold,-1)
-    np.add.at(cnt,dnew,1)
-    nfg=first_gap(cnt); nn=nfg-1
-    accept = nn>=n or random.random()<np.exp((nn-n)/T)
-    if accept:
-        pts_set.discard(old); pts_set.add(cand)
-        arr[i]=cand; n=nn; fg=nfg
+    np.add.at(cnt,dold,-1); np.add.at(cnt,dnew,1)
+    nn=first_gap(cnt)-1
+    if nn>=n or random.random()<np.exp((nn-n)/T):
+        pts_set.discard(old); pts_set.add(cand); arr[i]=cand; n=nn; fg=n+1
         if n>best_n:
-            best_n=n; best_pts=arr.tolist()
-            print("NEW BEST n=",best_n,"ratio=",M*M/best_n,"it=",it,"t=",round(time.time()-t0,1),flush=True)
-            if best_n>=TARGET:
-                print("*** BEAT BASELINE ***",flush=True)
+            vn=brute_cov_n(arr.tolist())
+            if vn>best_n:
+                best_n=vn; best_pts=arr.tolist()
+                print("NEW BEST n=",best_n,"ratio=",M*M/best_n,"it=",it,"t=",round(time.time()-t0,1),flush=True)
     else:
-        np.add.at(cnt,dnew,-1)
-        np.add.at(cnt,dold,1)
-print("done it=",it,"best_n=",best_n,"best_ratio=",M*M/best_n,flush=True)
-json.dump({"n":best_n,"basis":best_pts,"ratio":M*M/best_n},open("/tmp/work/anneal_best.json","w"))
+        np.add.at(cnt,dnew,-1); np.add.at(cnt,dold,1)
+vn=brute_cov_n(best_pts)
+print("done it=",it,"best_n=",best_n,"verified_n=",vn,"ratio=",M*M/vn,flush=True)
+json.dump({"n":vn,"basis":sorted(set(best_pts)),"ratio":M*M/vn},open("/tmp/work/anneal_best.json","w"))
