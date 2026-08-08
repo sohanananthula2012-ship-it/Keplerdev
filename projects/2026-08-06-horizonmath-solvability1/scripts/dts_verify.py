@@ -12,8 +12,8 @@ def verify(rows, n=7, k=5):
         assert r[0] == 0, f"row must start at 0: {r}"
         for a, b in zip(r, r[1:]):
             assert b > a, f"row not strictly increasing: {r}"
-        for j, jp in combinations(range(k + 1), 2):
-            # jp<j indices; combinations gives (jp, j) with jp<j
+        for jp, j in combinations(range(k + 1), 2):
+            # combinations yields jp < j, so r[j] > r[jp]
             diffs.append(r[j] - r[jp])
     # all differences distinct?
     assert all(d > 0 for d in diffs)
