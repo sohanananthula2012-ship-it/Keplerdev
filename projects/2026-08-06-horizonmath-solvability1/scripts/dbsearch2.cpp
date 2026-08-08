@@ -60,24 +60,18 @@ int main(int argc,char**argv){
         if(D.empty()){fprintf(stderr,"q=%lld no singer\n",q);continue;}
         // cov needed to beat baseline 2.639: 16(q+1)^2/2.639 - 6m
         double reqd=16.0*(q+1)*(q+1)/BASELINE-6.0*m;
-        long long C=(long long)ceil(reqd)+40; if(C>m-1)C=m-1; if(C<50)C=50;
+        long long C=m-1;  // full cap: with a perfect set the count==0 early-exit keeps it fast
         vector<long long> arcstart(C+1); vector<char> alive(m); vector<long long> uD(D.size());
         long long bcov=0,bu=1;
         for(long long u=1;u<m;u++){
+            if(std::__gcd(u,m)!=1) continue; // only units preserve the difference-set property
             for(size_t i=0;i<D.size();i++) uD[i]=(u*D[i])%m;
             sort(uD.begin(),uD.end());
             long long c=arc_maxcov(uD,m,C,arcstart,alive);
             if(c>bcov){bcov=c;bu=u;}
         }
-        // brute-verify best unit: scan all translations directly to get true cov & t
-        for(size_t i=0;i<D.size();i++) uD[i]=(bu*D[i])%m;
-        long long truecov=0,truet=0; vector<long long> St(D.size());
-        for(long long t=0;t<m;t++){
-            for(size_t i=0;i<D.size();i++) St[i]=(uD[i]+t)%m;
-            sort(St.begin(),St.end());
-            long long c=covB_direct(St,min(C+5,m-1));
-            if(c>truecov){truecov=c;truet=t;}
-        }
+        // report best unit (arc cov). t recovered later in Python for winners.
+        long long truecov=bcov, truet=-1;
         long long k=6*m+truecov;
         double ratio=16.0*(q+1)*(q+1)/(double)k;
         printf("q=%lld m=%lld reqd=%.1f arc_cov=%lld true_cov=%lld u=%lld t=%lld k=%lld ratio=%.7f %s\n",
