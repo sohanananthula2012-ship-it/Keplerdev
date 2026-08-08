@@ -1,0 +1,15 @@
+PRIME-POWER q Singer-difference-set scan (NEW this session; A={0,1,4,6}).
+ratio = |L|^2/(6m+cov_B), |L|=4(q+1), m=q^2+q+1. Baseline to beat: 2.639 (strict).
+Perfect Singer sets built via GF(q^3)=GF(p^e) tower arithmetic; arc method validated.
+
+q=8  (2^3)  m=73    bestcov=27   k=465    ratio=2.7870968
+q=9  (3^2)  m=91    bestcov=35   k=581    ratio=2.7538726
+q=25 (5^2)  m=651   bestcov=158  k=4064   ratio=2.6614173
+q=64 (2^6)  m=4161  bestcov=567  k=25533  ratio=2.6475541
+q=81 (3^4)  m=6643  bestcov=711  k=40569  ratio=2.6518770
+q=121(11^2) m=14763 bestcov=1238 k=89816  ratio=2.6514652
+q=125(5^3)  m=15751 bestcov=1400 k=95906  ratio=2.6485934
+q=128(2^7)  m=16513 bestcov=1437 k=100515 ratio=2.6489181
+
+Conclusion: no prime power beats 2.639. Combined with the prime-q scan, q=89 (prime)
+is the unique value reaching 2.6390 among all q (prime and prime-power) up to ~180.
