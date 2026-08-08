@@ -1,13 +1,10 @@
-"""Koubi-style DTS(7,5) search: DFS row construction with Gaussian-weighted
-candidate ordering. Reliable row completion (full within-row backtracking) plus
-the Gaussian per-position prior that makes low-scope DTSs findable.
+"""Koubi-style DTS(7,5) search: recursive cross-row backtracking with
+Gaussian-weighted candidate ordering inside each row's DFS.
 
-- Candidate mark order at position j uses Efraimidis-Spirakis weighted sampling
-  with weight = Normal_pdf(v; mu[j], sigma[j]); mu=None => uniform (for training).
-- Row-replacement backtracking across rows.
+- Candidate mark order at position j: Efraimidis-Spirakis weighted sampling with
+  weight = Normal_pdf(v; mu[j], sigma[j]); mu=None => uniform (for training).
+- Proper recursive backtracking across the 7 rows (like a working DFS solver).
 - Params trained on easy larger-scope DTSs, scaled by M/M'.
-
-Provides train_params(), scale_params(), search(), verify().
 """
 import sys, json, time, random, math
 
@@ -49,10 +46,10 @@ def build_row(used, mu, sigma, M, rng, deadline, node_cap):
         for v in _order(cands, mj, sj, rng):
             nb = 0; ok = True
             for m in marks:
-                d = v - m
-                if (used >> d) & 1 or (dm >> d) & 1 or (nb >> d) & 1:
+                dd = v - m
+                if (used >> dd) & 1 or (dm >> dd) & 1 or (nb >> dd) & 1:
                     ok = False; break
-                nb |= (1 << d)
+                nb |= (1 << dd)
             if not ok:
                 continue
             marks.append(v)
@@ -63,29 +60,29 @@ def build_row(used, mu, sigma, M, rng, deadline, node_cap):
         return None
 
     dm = rec(1, 0)
-    if dm is None:
-        return None
-    return list(marks), dm
+    return (list(marks), dm) if dm is not None else None
 
 
-def build_dts(M, mu, sigma, rng, deadline, thresh1=60, row_tries=25, node_cap=4000):
-    rows = []; dmasks = []; used = 0; it = 0
-    while len(rows) < N and it < thresh1:
+def build_dts(M, mu, sigma, rng, deadline, row_tries=30, node_cap=8000):
+    rows = []; dmasks = []
+
+    def rec(row_idx, used):
         if time.time() > deadline:
-            return None
-        it += 1
-        placed = False
+            return False
+        if row_idx == N:
+            return True
         for _ in range(row_tries):
             r = build_row(used, mu, sigma, M, rng, deadline, node_cap)
             if r is None:
                 continue
             marks, dm = r
-            rows.append(marks); dmasks.append(dm); used |= dm
-            placed = True
-            break
-        if not placed and rows:
-            used ^= dmasks.pop(); rows.pop()
-    return rows if len(rows) == N else None
+            rows.append(marks); dmasks.append(dm)
+            if rec(row_idx + 1, used | dm):
+                return True
+            rows.pop(); dmasks.pop()
+        return False
+
+    return rows[:] if rec(0, 0) else None
 
 
 def train_params(Mp, n_dts, rng, time_budget):
@@ -138,10 +135,10 @@ def search(M, tlimit, mu, sigma, seed):
 
 if __name__ == "__main__":
     M = int(sys.argv[1]); tl = float(sys.argv[2])
-    Mp = int(sys.argv[3]) if len(sys.argv) > 3 else 140
+    Mp = int(sys.argv[3]) if len(sys.argv) > 3 else 130
     seed = int(sys.argv[4]) if len(sys.argv) > 4 else 0
     rng = random.Random(seed)
-    mu, sigma, nf = train_params(Mp, 60, rng, time_budget=min(20, tl / 3))
+    mu, sigma, nf = train_params(Mp, 80, rng, time_budget=min(20, tl / 3))
     print(f"# trained {nf} at M'={Mp} mu={[round(x) for x in mu]} sig={[round(x,1) for x in sigma]}",
           file=sys.stderr)
     mu2, s2 = scale_params(mu, sigma, Mp, M, 1.1)
