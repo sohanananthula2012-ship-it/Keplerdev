@@ -50,7 +50,7 @@ int main(int argc,char**argv){
         vector<long long> D=singer(q);
         if(D.empty()){fprintf(stderr,"q=%lld no singer\n",q);continue;}
         double reqd=16.0*(q+1)*(q+1)/BASELINE-6.0*m;
-        long long C=m-1;
+        long long C=(long long)ceil(reqd)+3; if(C>m-1)C=m-1; if(C<40)C=40;
         vector<long long> arcstart(C+1); vector<char> alive(m); vector<long long> uD(D.size());
         long long bcov=0,bu=1;
         for(long long u=1;u<m;u++){
