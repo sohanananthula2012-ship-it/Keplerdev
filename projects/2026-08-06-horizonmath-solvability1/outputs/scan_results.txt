@@ -1,0 +1,18 @@
+Systematic units×translations Singer-difference-set scan (A={0,1,4,6}), ratio=|L|^2/(6m+cov_B).
+Baseline to beat: 2.639 (strict). Validated arc method (matches brute force).
+
+q=31  m=993   bestcov=208  k=6166   ratio=2.6571521   (= classic 128^2/6166)
+q=41  m=1723  bestcov=325  k=10663  ratio=2.6469099
+q=59  m=3541  bestcov=521  k=21767  ratio=2.6462076
+q=71  m=5113  bestcov=634  k=31312  ratio=2.6489525
+q=79  m=6321  bestcov=757  k=38683  ratio=2.6471577
+q=83  m=6973  bestcov=813  k=42651  ratio=2.6469719
+q=89  m=8011  bestcov=1043 k=49109  ratio=2.6390275   <-- record (matches baseline)
+q=97  m=9507  bestcov=997  k=58039  ratio=2.6475990
+q=101 m=10303 bestcov=1084 k=62902  ratio=2.6464023
+q=103 m=10713 bestcov=1131 k=65409  ratio=2.6457521
+q=107 m=11557 bestcov=1045 k=70387  ratio=2.6513987
+q=181 m=32943 bestcov=2053 k=199711 ratio=2.6537547
+
+Conclusion: only q=89 reaches 2.6390; all other scanned primes >= 2.6458. No beat found.
+q=89 is an isolated optimum of the construction family (f - 6/q peaks at q=89).
