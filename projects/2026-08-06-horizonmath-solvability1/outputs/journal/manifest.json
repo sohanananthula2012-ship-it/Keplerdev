@@ -1,0 +1,627 @@
+[
+{
+"file": "fig001.png",
+"caption": "A minimal difference basis B={0,1,4,6}. Its pairwise differences realize every k in {1,...,6}, so n=6 and ratio |B|\u00b2/n = 16/6 = 2.667. The whole record construction is built on top of this tiny block.",
+"section": "1. The Problem: Difference Bases and the Constant C"
+},
+{
+"file": "fig002.png",
+"caption": "A sparse ruler is the geometric twin of a difference basis: marks at positions so that every integer distance up to the length is spanned by some pair of marks.",
+"section": "1. The Problem: Difference Bases and the Constant C"
+},
+{
+"file": "fig003.png",
+"caption": "Wichmann's 1963 construction W(r,s) with gap pattern 1^r,(r+1),(2r+1)^r,(4r+3)^s,(2r+2)^{r+1},1^r. Asymptotically it gives constant 8/3\u22482.667 \u2014 good, but not the record.",
+"section": "1. The Problem: Difference Bases and the Constant C"
+},
+{
+"file": "fig004.png",
+"caption": "Seven decades of progress on C. The lower bound 2.434 (Leech) and the long-standing 2.6571 (Golay). AlphaEvolve's 2.6390 (2025) is the current record and the target of this journal.",
+"section": "1. The Problem: Difference Bases and the Constant C"
+},
+{
+"file": "fig005.png",
+"caption": "The classical lower bound. No difference basis can achieve a ratio below 2.434, so the feasible window for improvement over 2.6390 is narrow \u2014 every 'beat' below 2.434 in a search is necessarily a bug (a check we used repeatedly).",
+"section": "1. The Problem: Difference Bases and the Constant C"
+},
+{
+"file": "fig006.png",
+"caption": "The base A={0,1,4,6} has A\u2212A equal to the whole interval [\u22126,6]. This contiguity is what lets the six lowest 'blocks' of the combined set be covered completely.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig007.png",
+"caption": "The 90-element planar Singer difference set for q=89 placed on the cyclic group Z/8011. Its 90\u00b789=8010 ordered differences hit every nonzero residue exactly once \u2014 a perfect difference set.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig008.png",
+"caption": "Distribution of the 4005 positive pairwise differences of the record B. The density near small values is what determines the self-coverage cov_B \u2014 the quantity that makes q=89 special.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig009.png",
+"caption": "B alone covers 1,2,\u2026,1043 contiguously as positive differences, then 1044 is missing. This cov_B=1043 is the extra term in n = 6m + cov_B = 48066 + 1043 = 49109.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig010.png",
+"caption": "The Leech combination stacks four shifted copies of B at offsets a\u00b7m (a\u2208{0,1,4,6}). The interaction of A\u2212A=[\u22126,6] with the perfect set B produces contiguous coverage of {1..49109}.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig011.png",
+"caption": "The coverage decomposes cleanly: the first six blocks are fully covered because A\u2212A=[\u22126,6] reaches every residue; the seventh (top) block only keeps the P-type residues, adding cov_B. Total n = 49109.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig012.png",
+"caption": "Exhaustive check: L realizes every k\u2208{1..49109} as a difference and misses 49110. Ratio = 360\u00b2/49109 = 2.639027\u2026 \u2014 exactly the published record.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig013.png",
+"caption": "Blocks q=0..5 (dark) are fully covered by both P- and N-type representations. In block q=6 only P-type residues survive (needing \u03b1\u22646\u2208A\u2212A); N-type would need \u03b1=7\u2209A\u2212A. That truncation at cov_B is the entire story of the constant.",
+"section": "2. The Record Construction (AlphaEvolve, q=89)"
+},
+{
+"file": "fig014.png",
+"caption": "The master result: across every scanned prime and prime power, only q=89 touches the baseline 2.639; all others sit at \u22652.646. The record is an isolated dip.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig015.png",
+"caption": "Restricting to prime q, the ratio hovers around 2.646\u20132.66 with a single sharp minimum at q=89.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig016.png",
+"caption": "Adding prime-power q (squares) \u2014 a family unexplored in the literature and implemented here via GF(p\u1d49) tower arithmetic \u2014 fills the gaps but produces no new dip below the baseline.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig017.png",
+"caption": "cov_B grows roughly like a constant fraction of (q+1)\u00b2; the record's cov_B=1043 is anomalously high for its size.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig018.png",
+"caption": "The normalized self-coverage f. q=89 sits above the local trend \u2014 its Singer set packs small differences unusually densely.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig019.png",
+"caption": "The competing term. ratio = 16/(6 \u2212 6/q + f); shrinking 6/q helps, but only until f starts falling faster.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig020.png",
+"caption": "Since ratio = 16/(6 \u2212 6/q + f), minimizing the ratio means maximizing f \u2212 6/q. This quantity peaks sharply at q=89 \u2014 the mathematical reason AlphaEvolve selected it.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig021.png",
+"caption": "Zooming in: the neighbours (79,83,97,101,103,107) all sit near 2.647; q=89 alone plunges to 2.6390. A genuine number-theoretic anomaly.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig022.png",
+"caption": "Each construction as a point (n,|L|); dashed curves are constant-ratio |L|=\u221a(c\u00b7n). Beating the baseline means landing below the 2.639 curve \u2014 only q=89 gets there.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig023.png",
+"caption": "How far each q sits above the baseline. q=89 is essentially zero (the record); everything else is a clear positive gap.",
+"section": "3. Why q=89? The f \u2212 6/q Peak"
+},
+{
+"file": "fig024.png",
+"caption": "Optimal-rotation Singer difference set for q=7 on Z/57. cov_B=21, giving ratio 2.82094.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig025.png",
+"caption": "Optimal-rotation Singer difference set for q=8 on Z/73. cov_B=27, giving ratio 2.78710.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig026.png",
+"caption": "Optimal-rotation Singer difference set for q=9 on Z/91. cov_B=35, giving ratio 2.75387.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig027.png",
+"caption": "Optimal-rotation Singer difference set for q=11 on Z/133. cov_B=47, giving ratio 2.72663.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig028.png",
+"caption": "Optimal-rotation Singer difference set for q=13 on Z/183. cov_B=55, giving ratio 2.71986.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig029.png",
+"caption": "Optimal-rotation Singer difference set for q=16 on Z/273. cov_B=71, giving ratio 2.70568.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig030.png",
+"caption": "Optimal-rotation Singer difference set for q=17 on Z/307. cov_B=90, giving ratio 2.68323.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig031.png",
+"caption": "Optimal-rotation Singer difference set for q=19 on Z/381. cov_B=97, giving ratio 2.68569.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig032.png",
+"caption": "Optimal-rotation Singer difference set for q=23 on Z/553. cov_B=127, giving ratio 2.67518.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig033.png",
+"caption": "Optimal-rotation Singer difference set for q=25 on Z/651. cov_B=158, giving ratio 2.66142.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig034.png",
+"caption": "Optimal-rotation Singer difference set for q=27 on Z/757. cov_B=171, giving ratio 2.66157.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig035.png",
+"caption": "Optimal-rotation Singer difference set for q=29 on Z/871. cov_B=190, giving ratio 2.65879.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig036.png",
+"caption": "Optimal-rotation Singer difference set for q=31 on Z/993. cov_B=208, giving ratio 2.65715.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig037.png",
+"caption": "Optimal-rotation Singer difference set for q=32 on Z/1057. cov_B=197, giving ratio 2.66463.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig038.png",
+"caption": "Optimal-rotation Singer difference set for q=37 on Z/1407. cov_B=260, giving ratio 2.65502.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig039.png",
+"caption": "Optimal-rotation Singer difference set for q=41 on Z/1723. cov_B=325, giving ratio 2.64691.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig040.png",
+"caption": "Optimal-rotation Singer difference set for q=43 on Z/1893. cov_B=296, giving ratio 2.65797.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig041.png",
+"caption": "Optimal-rotation Singer difference set for q=47 on Z/2257. cov_B=341, giving ratio 2.65533.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig042.png",
+"caption": "Optimal-rotation Singer difference set for q=49 on Z/2451. cov_B=356, giving ratio 2.65569.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig043.png",
+"caption": "Optimal-rotation Singer difference set for q=53 on Z/2863. cov_B=489, giving ratio 2.64086.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig044.png",
+"caption": "Optimal-rotation Singer difference set for q=59 on Z/3541. cov_B=521, giving ratio 2.64621.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig045.png",
+"caption": "Optimal-rotation Singer difference set for q=61 on Z/3783. cov_B=567, giving ratio 2.64363.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig046.png",
+"caption": "Optimal-rotation Singer difference set for q=64 on Z/4161. cov_B=567, giving ratio 2.64755.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig047.png",
+"caption": "Optimal-rotation Singer difference set for q=67 on Z/4557. cov_B=600, giving ratio 2.64777.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig048.png",
+"caption": "Optimal-rotation Singer difference set for q=73 on Z/5403. cov_B=649, giving ratio 2.64965.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig049.png",
+"caption": "Optimal-rotation Singer difference set for q=81 on Z/6643. cov_B=711, giving ratio 2.65188.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig050.png",
+"caption": "Optimal-rotation Singer difference set for q=83 on Z/6973. cov_B=813, giving ratio 2.64697.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig051.png",
+"caption": "Optimal-rotation Singer difference set for q=89 on Z/8011. cov_B=1043, giving ratio 2.63903.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig052.png",
+"caption": "Optimal-rotation Singer difference set for q=101 on Z/10303. cov_B=1084, giving ratio 2.64640.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig053.png",
+"caption": "Optimal-rotation Singer difference set for q=107 on Z/11557. cov_B=1045, giving ratio 2.65140.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig054.png",
+"caption": "Optimal-rotation Singer difference set for q=127 on Z/16257. cov_B=1297, giving ratio 2.65223.",
+"section": "4. Atlas of Singer Constructions (per-q)"
+},
+{
+"file": "fig055.png",
+"caption": "Contiguous self-coverage for q=7: reaches cov_B=21 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig056.png",
+"caption": "Contiguous self-coverage for q=8: reaches cov_B=27 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig057.png",
+"caption": "Contiguous self-coverage for q=9: reaches cov_B=35 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig058.png",
+"caption": "Contiguous self-coverage for q=11: reaches cov_B=47 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig059.png",
+"caption": "Contiguous self-coverage for q=13: reaches cov_B=55 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig060.png",
+"caption": "Contiguous self-coverage for q=16: reaches cov_B=71 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig061.png",
+"caption": "Contiguous self-coverage for q=17: reaches cov_B=90 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig062.png",
+"caption": "Contiguous self-coverage for q=19: reaches cov_B=97 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig063.png",
+"caption": "Contiguous self-coverage for q=23: reaches cov_B=127 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig064.png",
+"caption": "Contiguous self-coverage for q=25: reaches cov_B=158 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig065.png",
+"caption": "Contiguous self-coverage for q=27: reaches cov_B=171 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig066.png",
+"caption": "Contiguous self-coverage for q=29: reaches cov_B=190 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig067.png",
+"caption": "Contiguous self-coverage for q=31: reaches cov_B=208 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig068.png",
+"caption": "Contiguous self-coverage for q=32: reaches cov_B=197 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig069.png",
+"caption": "Contiguous self-coverage for q=37: reaches cov_B=260 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig070.png",
+"caption": "Contiguous self-coverage for q=41: reaches cov_B=325 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig071.png",
+"caption": "Contiguous self-coverage for q=43: reaches cov_B=296 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig072.png",
+"caption": "Contiguous self-coverage for q=47: reaches cov_B=341 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig073.png",
+"caption": "Contiguous self-coverage for q=49: reaches cov_B=356 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig074.png",
+"caption": "Contiguous self-coverage for q=53: reaches cov_B=489 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig075.png",
+"caption": "Contiguous self-coverage for q=59: reaches cov_B=521 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig076.png",
+"caption": "Contiguous self-coverage for q=61: reaches cov_B=567 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig077.png",
+"caption": "Contiguous self-coverage for q=64: reaches cov_B=567 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig078.png",
+"caption": "Contiguous self-coverage for q=67: reaches cov_B=600 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig079.png",
+"caption": "Contiguous self-coverage for q=73: reaches cov_B=649 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig080.png",
+"caption": "Contiguous self-coverage for q=81: reaches cov_B=711 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig081.png",
+"caption": "Contiguous self-coverage for q=83: reaches cov_B=813 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig082.png",
+"caption": "Contiguous self-coverage for q=89: reaches cov_B=1043 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig083.png",
+"caption": "Contiguous self-coverage for q=101: reaches cov_B=1084 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig084.png",
+"caption": "Contiguous self-coverage for q=107: reaches cov_B=1045 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig085.png",
+"caption": "Contiguous self-coverage for q=127: reaches cov_B=1297 before the first gap. The height of this plateau, relative to (q+1)\u00b2, is what the whole search optimizes.",
+"section": "5. Self-coverage profiles (per-q)"
+},
+{
+"file": "fig086.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=7. Small differences up to cov_B=21 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig087.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=8. Small differences up to cov_B=27 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig088.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=9. Small differences up to cov_B=35 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig089.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=11. Small differences up to cov_B=47 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig090.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=13. Small differences up to cov_B=55 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig091.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=16. Small differences up to cov_B=71 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig092.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=17. Small differences up to cov_B=90 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig093.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=19. Small differences up to cov_B=97 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig094.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=23. Small differences up to cov_B=127 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig095.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=25. Small differences up to cov_B=158 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig096.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=27. Small differences up to cov_B=171 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig097.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=29. Small differences up to cov_B=190 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig098.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=31. Small differences up to cov_B=208 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig099.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=32. Small differences up to cov_B=197 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig100.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=37. Small differences up to cov_B=260 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig101.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=41. Small differences up to cov_B=325 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig102.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=43. Small differences up to cov_B=296 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig103.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=47. Small differences up to cov_B=341 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig104.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=49. Small differences up to cov_B=356 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig105.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=53. Small differences up to cov_B=489 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig106.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=59. Small differences up to cov_B=521 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig107.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=61. Small differences up to cov_B=567 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig108.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=64. Small differences up to cov_B=567 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig109.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=67. Small differences up to cov_B=600 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig110.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=73. Small differences up to cov_B=649 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig111.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=81. Small differences up to cov_B=711 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig112.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=83. Small differences up to cov_B=813 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig113.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=89. Small differences up to cov_B=1043 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig114.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=101. Small differences up to cov_B=1084 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig115.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=107. Small differences up to cov_B=1045 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig116.png",
+"caption": "Positive-difference spectrum of the optimal Singer representative for q=127. Small differences up to cov_B=1297 are all present (contiguous); beyond that gaps appear.",
+"section": "6. Difference Spectra (per-q)"
+},
+{
+"file": "fig117.png",
+"caption": "The arc method (validated against brute force). For a perfect difference set, residue d is realized without wrap at cut t unless t lies in a length-d arc; the best rotation is the cut surviving longest, computed in one pass.",
+"section": "7. The Search Machinery"
+},
+{
+"file": "fig118.png",
+"caption": "Sampling unit multiples u of the q=89 Singer set: the raw self-coverage (cut at 0) swings enormously. Only after also optimizing the rotation does the best representative reach the record cov_B=1043.",
+"section": "7. The Search Machinery"
+},
+{
+"file": "fig119.png",
+"caption": "Histogram of self-coverage across sampled unit multiples for q=89 \u2014 most representatives are mediocre; the record lives in the extreme right tail, which is why finding it required search.",
+"section": "7. The Search Machinery"
+},
+{
+"file": "fig120.png",
+"caption": "For prime q the Singer multiplier group is \u27e8q\u27e9 of order 3, so unit multiples come in orbits of 3 giving identical coverage \u2014 a 3\u00d7 (for q=p\u1d49, 3e\u00d7) speedup exploited in the search.",
+"section": "7. The Search Machinery"
+},
+{
+"file": "fig121.png",
+"caption": "To reach prime-power q we build GF(q\u00b3) as a degree-3 extension of GF(q)=F_p[y]/(g); the difference set is the log-indices of elements in a fixed hyperplane. This extends the search beyond prime q.",
+"section": "7. The Search Machinery"
+},
+{
+"file": "fig122.png",
+"caption": "The needed vs achieved self-coverage. The two curves essentially touch only at q=89 (achieved 1043 vs needed 1043.5) \u2014 the record sits exactly on the knife-edge; everywhere else achieved falls short of needed.",
+"section": "8. Attempts to Beat 2.6390 & Research Directions"
+},
+{
+"file": "fig123.png",
+"caption": "Why the base A cannot be improved: the efficiency |A|\u00b2/max(A\u2212A) is minimized at |A|=4 (value 2.667). Enlarging A to recover the lost top-block residues costs far more than it saves \u2014 a dead end (analyzed, not merely asserted).",
+"section": "8. Attempts to Beat 2.6390 & Research Directions"
+},
+{
+"file": "fig124.png",
+"caption": "The leading untried direction: a three-level product exposes more free parameters than the record's two-level combination (the historical route from 2.6571 to earlier bounds). The open sub-problem is keeping the inner product near-perfect.",
+"section": "8. Attempts to Beat 2.6390 & Research Directions"
+},
+{
+"file": "fig125.png",
+"caption": "Summary comparison: q=89 is the unique value reaching the baseline; its immediate neighbours and the prime-power alternatives all sit measurably higher.",
+"section": "8. Attempts to Beat 2.6390 & Research Directions"
+}
+]

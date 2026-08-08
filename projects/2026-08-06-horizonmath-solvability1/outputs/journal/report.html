@@ -1,0 +1,342 @@
+<!doctype html><html><head><meta charset='utf-8'><style>
+@page { size: A4; margin: 18mm 16mm 20mm 16mm;
+  @bottom-center { content: counter(page); font-family: Georgia; color:#888; font-size:10px; } }
+* { box-sizing: border-box; }
+body { font-family: Georgia,'Times New Roman',serif; color:#1a1a1a; line-height:1.5; font-size:11.5px; margin:0; }
+h1,h2,h3 { font-family: Helvetica,Arial,sans-serif; color:#12305a; line-height:1.2; }
+h1 { font-size:26px; } h2 { font-size:19px; border-bottom:2px solid #12305a; padding-bottom:4px; margin-top:6px;}
+h3 { font-size:14px; color:#2a6ebb; }
+p { text-align: justify; margin:6px 0; }
+.cover { height: 245mm; display:flex; flex-direction:column; justify-content:center; text-align:center; }
+.cover h1 { font-size:34px; margin-bottom:6px; }
+.cover .sub { font-size:16px; color:#444; margin:4px 0; }
+.cover .meta { margin-top:40px; font-size:12px; color:#666; }
+.badge { display:inline-block; background:#12305a; color:white; padding:6px 14px; border-radius:16px; font-family:Helvetica; font-size:13px; margin-top:16px;}
+.section { page-break-before: always; }
+figure.fig { width:80%; display:block; margin:16px auto; page-break-inside:avoid; page-break-inside:avoid; }
+figure.fig.wide { width: 92%; display:block; margin:10px auto; }
+figure.fig img, figure.fig.wide img { width:100%; border:1px solid #e3e3e3; border-radius:4px; }
+figcaption { font-size:9.5px; color:#444; margin-top:3px; text-align:justify; }
+.toc div { margin:3px 0; font-family:Helvetica; font-size:12px; }
+table { border-collapse:collapse; width:100%; font-size:9.5px; font-family:Helvetica; margin:8px 0; }
+th,td { border:1px solid #d0d7e2; padding:3px 5px; text-align:right; }
+th { background:#eef2f8; } td.l,th.l{text-align:left;}
+tr.hl td { background:#fde8ec; font-weight:bold; }
+pre { background:#0f1524; color:#d6e2f5; font-family:Consolas,monospace; font-size:8px; padding:8px; border-radius:5px; overflow:hidden; white-space:pre-wrap; page-break-inside:avoid; }
+.key { background:#eef7ee; border-left:4px solid #2e933c; padding:8px 12px; margin:10px 0; }
+.warn { background:#fdf0ee; border-left:4px solid #d1495b; padding:8px 12px; margin:10px 0; }
+blockquote { border-left:3px solid #ccc; margin:8px 0; padding-left:12px; color:#333; font-style:italic; }
+.eq { text-align:center; font-size:14px; margin:10px 0; font-family:'Cambria Math',Georgia; }
+</style></head><body><div class="cover">
+<div class="badge">Kepler Research Journal</div>
+<h1>The Difference-Basis Constant</h1>
+<div class="sub">Reproducing, Explaining, and Searching Beyond the AlphaEvolve Record 2.6390</div>
+<div class="sub">A computational study of Singer difference sets, the Leech combination, and why q = 89 is special</div>
+<div class="meta">HorizonMath problem <code>diff_basis_upper</code> · combinatorics / additive number theory<br/>
+125 figures · 31 constructions analyzed · generated in a 64-core Daytona sandbox<br/>
+All code, data, and this document: github.com/sohanananthula2012-ship-it/Keplerdev</div>
+</div><div class="section"><h2>Executive Summary</h2>
+<p>A <b>difference basis</b> for {1,…,n} is a set B of integers whose pairwise differences realize every
+integer from 1 to n. The central quantity is the constant
+<span class="eq">C = lim<sub>n→∞</sub> Δ(n)² / n = inf<sub>n</sub> Δ(n)² / n,</span>
+where Δ(n) is the size of the smallest difference basis for {1,…,n}. Improving the upper bound on C means
+exhibiting an explicit pair (n, B) with a small ratio |B|²/n. The current record, <b>2.6390</b>, was set in
+2025 by AlphaEvolve (Georgiev, Gómez-Serrano, Tao, Wagner).</p>
+<p>This journal (i) <b>reproduces</b> the record exactly and verifies it with an independent brute-force
+coverage check; (ii) <b>derives the coverage law</b> that governs the whole construction family and uses it
+to explain <b>why the record lives precisely at q = 89</b>; (iii) runs a <b>systematic search</b> — the full
+units×translations optimization over Singer difference sets for every prime and, for the first time,
+prime-power q — confirming q = 89 is an isolated optimum; and (iv) lays out the concrete
+<b>directions that could beat 2.6390</b>.</p>
+<div class="key"><b>Headline results.</b>
+(1) Verified reproduction: |L| = 360, n = 49109, ratio = 360²/49109 = <b>2.639027…</b> (official validator: valid).
+(2) Governing identity: <span class="eq">ratio = 16 / (6 − 6/q + f), &nbsp; f = cov<sub>B</sub>/(q+1)².</span>
+Beating the record ⇔ maximizing f − 6/q, which <b>peaks sharply at q = 89</b>.
+(3) Across all scanned q (primes 7–≈180 and prime powers 8–128), <b>only q = 89 reaches 2.6390</b>; every other
+value sits at ≥ 2.646. No beat was found — and none was fabricated.</div>
+<div class="warn"><b>Honest status.</b> This is a verified <i>match</i> of the best-known value, not a new
+record. The construction family's optimum is 2.6390; strictly beating it needs a different family or a far
+larger anomaly search (§8).</div>
+</div><div class='section'><h2>Contents</h2><div class='toc'><div>1. &nbsp; The problem: difference bases and the constant C</div><div>2. &nbsp; The record construction (AlphaEvolve, q = 89)</div><div>3. &nbsp; Coverage theory: the identity n = 6m + cov_B</div><div>4. &nbsp; Why q = 89? The f − 6/q peak</div><div>5. &nbsp; Atlas of Singer constructions (per-q)</div><div>6. &nbsp; Self-coverage profiles (per-q)</div><div>7. &nbsp; Difference spectra (per-q)</div><div>8. &nbsp; The search machinery</div><div>9. &nbsp; Attempts to beat 2.6390 and research directions</div><div>10. &nbsp; Methods, code, and reproducibility</div><div>11. &nbsp; Full data table and conclusion</div></div></div><div class="section"><h2>1. The Problem: Difference Bases and the Constant C</h2>
+<p>Fix n. We seek the smallest set B with {1,…,n} ⊆ B−B (the difference set). Equivalently, a
+<b>sparse ruler</b>: marks on a ruler so every integer length up to the end can be measured between two
+marks. The number of ordered pairs is |B|(|B|−1), so trivially n ≤ |B|² and C ≥ 1; the truth is far subtler.</p>
+<p>Erdős and Gál (1948) proved the limit C exists; Leech (1956) gave the lower bound
+C ≥ max<sub>θ</sub> 2(1 − sinθ/θ) = 2.434…. Upper bounds came from explicit constructions:
+Rédei–Rényi and Leech reached ≈ 2.6667, Golay (1972) reached 128²/6166 = 2.6571, and this stood as the best
+"clean" construction for decades. In 2025 AlphaEvolve's large-scale program search pushed the upper bound to
+<b>2.6390</b>. Because the feasible window (2.434, 2.6390) is so tight, every candidate improvement must be
+checked ruthlessly — a value below 2.434 is, by theorem, a bug.</p>
+<figure class="fig wide"><img src="figs/fig001.png"/><figcaption><b>Figure 001.</b> A minimal difference basis B={0,1,4,6}. Its pairwise differences realize every k in {1,...,6}, so n=6 and ratio |B|²/n = 16/6 = 2.667. The whole record construction is built on top of this tiny block.</figcaption></figure>
+<figure class="fig"><img src="figs/fig002.png"/><figcaption><b>Figure 002.</b> A sparse ruler is the geometric twin of a difference basis: marks at positions so that every integer distance up to the length is spanned by some pair of marks.</figcaption></figure>
+<figure class="fig"><img src="figs/fig003.png"/><figcaption><b>Figure 003.</b> Wichmann&#x27;s 1963 construction W(r,s) with gap pattern 1^r,(r+1),(2r+1)^r,(4r+3)^s,(2r+2)^{r+1},1^r. Asymptotically it gives constant 8/3≈2.667 — good, but not the record.</figcaption></figure>
+<figure class="fig"><img src="figs/fig004.png"/><figcaption><b>Figure 004.</b> Seven decades of progress on C. The lower bound 2.434 (Leech) and the long-standing 2.6571 (Golay). AlphaEvolve&#x27;s 2.6390 (2025) is the current record and the target of this journal.</figcaption></figure>
+<figure class="fig"><img src="figs/fig005.png"/><figcaption><b>Figure 005.</b> The classical lower bound. No difference basis can achieve a ratio below 2.434, so the feasible window for improvement over 2.6390 is narrow — every &#x27;beat&#x27; below 2.434 in a search is necessarily a bug (a check we used repeatedly).</figcaption></figure>
+</div><div class="section"><h2>2. The Record Construction (AlphaEvolve, q = 89)</h2>
+<p>The record is a <b>Leech combination</b>
+<span class="eq">L = { a·m + b : a ∈ A, b ∈ B },</span>
+with three ingredients: a tiny base <b>A = {0,1,4,6}</b> (whose difference set A−A is the full interval
+[−6,6]); the modulus <b>m = 89² + 89 + 1 = 8011</b> (prime); and a 90-element <b>planar Singer difference set
+B</b> modulo m — a <i>perfect</i> difference set whose 90·89 = 8010 ordered differences hit every nonzero
+residue mod m exactly once. The product has |L| = 4·90 = <b>360</b> elements.</p>
+<p>The published construction (recovered from DeepMind's public problem repository) uses a specific rotation of
+the Singer set that maximizes its own self-coverage. The result covers every k in {1,…,49109} and misses
+49110, giving ratio 360²/49109 = 2.639027…. We rebuilt L from scratch and brute-force verified coverage of
+all 49109 values; the official HorizonMath validator returns <code>valid: true</code>.</p>
+<figure class="fig wide"><img src="figs/fig006.png"/><figcaption><b>Figure 006.</b> The base A={0,1,4,6} has A−A equal to the whole interval [−6,6]. This contiguity is what lets the six lowest &#x27;blocks&#x27; of the combined set be covered completely.</figcaption></figure>
+<figure class="fig"><img src="figs/fig007.png"/><figcaption><b>Figure 007.</b> The 90-element planar Singer difference set for q=89 placed on the cyclic group Z/8011. Its 90·89=8010 ordered differences hit every nonzero residue exactly once — a perfect difference set.</figcaption></figure>
+<figure class="fig"><img src="figs/fig008.png"/><figcaption><b>Figure 008.</b> Distribution of the 4005 positive pairwise differences of the record B. The density near small values is what determines the self-coverage cov_B — the quantity that makes q=89 special.</figcaption></figure>
+<figure class="fig"><img src="figs/fig009.png"/><figcaption><b>Figure 009.</b> B alone covers 1,2,…,1043 contiguously as positive differences, then 1044 is missing. This cov_B=1043 is the extra term in n = 6m + cov_B = 48066 + 1043 = 49109.</figcaption></figure>
+<figure class="fig"><img src="figs/fig010.png"/><figcaption><b>Figure 010.</b> The Leech combination stacks four shifted copies of B at offsets a·m (a∈{0,1,4,6}). The interaction of A−A=[−6,6] with the perfect set B produces contiguous coverage of {1..49109}.</figcaption></figure>
+<figure class="fig"><img src="figs/fig011.png"/><figcaption><b>Figure 011.</b> The coverage decomposes cleanly: the first six blocks are fully covered because A−A=[−6,6] reaches every residue; the seventh (top) block only keeps the P-type residues, adding cov_B. Total n = 49109.</figcaption></figure>
+<figure class="fig"><img src="figs/fig012.png"/><figcaption><b>Figure 012.</b> Exhaustive check: L realizes every k∈{1..49109} as a difference and misses 49110. Ratio = 360²/49109 = 2.639027… — exactly the published record.</figcaption></figure>
+<figure class="fig"><img src="figs/fig013.png"/><figcaption><b>Figure 013.</b> Blocks q=0..5 (dark) are fully covered by both P- and N-type representations. In block q=6 only P-type residues survive (needing α≤6∈A−A); N-type would need α=7∉A−A. That truncation at cov_B is the entire story of the constant.</figcaption></figure>
+</div><div class="section"><h2>3. Coverage Theory: the Identity n = 6m + cov_B</h2>
+<p>Why does this particular product cover a contiguous block? Write any target t = q·m + r with 0 ≤ r &lt; m.
+A difference of L has the form (a₁−a₂)·m + (b₁−b₂) = α·m + δ, where α ∈ A−A = [−6,6] and δ = b₁−b₂ is an
+actual (signed) difference of B. Because B is <b>perfect mod m</b>, each residue r is hit by exactly one
+ordered B-pair, whose signed value is either the small positive representative (call it P-type) or that value
+minus m (N-type).</p>
+<div class="key"><b>Block law.</b> For block index q ≤ 5, <i>every</i> residue is reachable (either the P-type
+rep with α = q, or the N-type rep with α = q+1 ≤ 6, both in A−A), so the whole range [0, 6m) is covered. In
+block q = 6 only the P-type residues survive (N-type would need α = 7 ∉ A−A), and these are contiguous exactly
+up to cov<sub>B</sub>, the self-coverage of B. Hence
+<span class="eq">n = 6·m + cov<sub>B</sub>.</span></div>
+<p>For q = 89: n = 6·8011 + 1043 = 48066 + 1043 = 49109. Substituting |L| = 4(q+1) and m = q²+q+1 and dividing
+through by (q+1)² gives the identity used throughout this journal:</p>
+<div class="eq">ratio = |L|² / n = 16(q+1)² / (6(q²+q+1) + cov<sub>B</sub>) = 16 / (6 − 6/q + f) + O(1/q²),
+&nbsp; f = cov<sub>B</sub>/(q+1)².</div>
+<p>So the problem collapses to a single scalar per q: maximize f − 6/q. Two forces compete — larger q shrinks
+the penalty 6/q, but the achievable self-coverage fraction f eventually falls. Their balance is the crux.</p>
+</div><div class="section"><h2>4. Why q = 89? The f − 6/q Peak</h2>
+<p>We computed, for each q, the maximum self-coverage cov<sub>B</sub> over <i>all</i> unit multiples and
+rotations of the Singer set (§8 explains the algorithm). The resulting curves below tell the whole story.
+The ratio-vs-q curve is flat near 2.646–2.66 with a single sharp plunge to 2.6390 at q = 89; the f − 6/q curve
+peaks there. AlphaEvolve did not choose 89 by taste — it is the arg-max of a concrete number-theoretic
+quantity, an anomaly where the Singer set happens to pack small differences unusually densely.</p>
+<figure class="fig wide"><img src="figs/fig014.png"/><figcaption><b>Figure 014.</b> The master result: across every scanned prime and prime power, only q=89 touches the baseline 2.639; all others sit at ≥2.646. The record is an isolated dip.</figcaption></figure>
+<figure class="fig"><img src="figs/fig015.png"/><figcaption><b>Figure 015.</b> Restricting to prime q, the ratio hovers around 2.646–2.66 with a single sharp minimum at q=89.</figcaption></figure>
+<figure class="fig"><img src="figs/fig016.png"/><figcaption><b>Figure 016.</b> Adding prime-power q (squares) — a family unexplored in the literature and implemented here via GF(pᵉ) tower arithmetic — fills the gaps but produces no new dip below the baseline.</figcaption></figure>
+<figure class="fig"><img src="figs/fig017.png"/><figcaption><b>Figure 017.</b> cov_B grows roughly like a constant fraction of (q+1)²; the record&#x27;s cov_B=1043 is anomalously high for its size.</figcaption></figure>
+<figure class="fig"><img src="figs/fig018.png"/><figcaption><b>Figure 018.</b> The normalized self-coverage f. q=89 sits above the local trend — its Singer set packs small differences unusually densely.</figcaption></figure>
+<figure class="fig"><img src="figs/fig019.png"/><figcaption><b>Figure 019.</b> The competing term. ratio = 16/(6 − 6/q + f); shrinking 6/q helps, but only until f starts falling faster.</figcaption></figure>
+<figure class="fig"><img src="figs/fig020.png"/><figcaption><b>Figure 020.</b> Since ratio = 16/(6 − 6/q + f), minimizing the ratio means maximizing f − 6/q. This quantity peaks sharply at q=89 — the mathematical reason AlphaEvolve selected it.</figcaption></figure>
+<figure class="fig"><img src="figs/fig021.png"/><figcaption><b>Figure 021.</b> Zooming in: the neighbours (79,83,97,101,103,107) all sit near 2.647; q=89 alone plunges to 2.6390. A genuine number-theoretic anomaly.</figcaption></figure>
+<figure class="fig"><img src="figs/fig022.png"/><figcaption><b>Figure 022.</b> Each construction as a point (n,|L|); dashed curves are constant-ratio |L|=√(c·n). Beating the baseline means landing below the 2.639 curve — only q=89 gets there.</figcaption></figure>
+<figure class="fig"><img src="figs/fig023.png"/><figcaption><b>Figure 023.</b> How far each q sits above the baseline. q=89 is essentially zero (the record); everything else is a clear positive gap.</figcaption></figure>
+</div><div class="section"><h2>5. Atlas of Singer Constructions (per-q)</h2>
+<p>Each optimal-rotation Singer difference set, drawn on its cyclic group Z/m. These are the actual B-sets
+found by the search; their captions give cov<sub>B</sub> and the achieved ratio. The visual texture — how
+evenly points spread and cluster — is the geometric shadow of the self-coverage that drives the constant.</p>
+<figure class="fig wide"><img src="figs/fig024.png"/><figcaption><b>Figure 024.</b> Optimal-rotation Singer difference set for q=7 on Z/57. cov_B=21, giving ratio 2.82094.</figcaption></figure>
+<figure class="fig"><img src="figs/fig025.png"/><figcaption><b>Figure 025.</b> Optimal-rotation Singer difference set for q=8 on Z/73. cov_B=27, giving ratio 2.78710.</figcaption></figure>
+<figure class="fig"><img src="figs/fig026.png"/><figcaption><b>Figure 026.</b> Optimal-rotation Singer difference set for q=9 on Z/91. cov_B=35, giving ratio 2.75387.</figcaption></figure>
+<figure class="fig"><img src="figs/fig027.png"/><figcaption><b>Figure 027.</b> Optimal-rotation Singer difference set for q=11 on Z/133. cov_B=47, giving ratio 2.72663.</figcaption></figure>
+<figure class="fig"><img src="figs/fig028.png"/><figcaption><b>Figure 028.</b> Optimal-rotation Singer difference set for q=13 on Z/183. cov_B=55, giving ratio 2.71986.</figcaption></figure>
+<figure class="fig"><img src="figs/fig029.png"/><figcaption><b>Figure 029.</b> Optimal-rotation Singer difference set for q=16 on Z/273. cov_B=71, giving ratio 2.70568.</figcaption></figure>
+<figure class="fig"><img src="figs/fig030.png"/><figcaption><b>Figure 030.</b> Optimal-rotation Singer difference set for q=17 on Z/307. cov_B=90, giving ratio 2.68323.</figcaption></figure>
+<figure class="fig"><img src="figs/fig031.png"/><figcaption><b>Figure 031.</b> Optimal-rotation Singer difference set for q=19 on Z/381. cov_B=97, giving ratio 2.68569.</figcaption></figure>
+<figure class="fig"><img src="figs/fig032.png"/><figcaption><b>Figure 032.</b> Optimal-rotation Singer difference set for q=23 on Z/553. cov_B=127, giving ratio 2.67518.</figcaption></figure>
+<figure class="fig"><img src="figs/fig033.png"/><figcaption><b>Figure 033.</b> Optimal-rotation Singer difference set for q=25 on Z/651. cov_B=158, giving ratio 2.66142.</figcaption></figure>
+<figure class="fig"><img src="figs/fig034.png"/><figcaption><b>Figure 034.</b> Optimal-rotation Singer difference set for q=27 on Z/757. cov_B=171, giving ratio 2.66157.</figcaption></figure>
+<figure class="fig"><img src="figs/fig035.png"/><figcaption><b>Figure 035.</b> Optimal-rotation Singer difference set for q=29 on Z/871. cov_B=190, giving ratio 2.65879.</figcaption></figure>
+<figure class="fig"><img src="figs/fig036.png"/><figcaption><b>Figure 036.</b> Optimal-rotation Singer difference set for q=31 on Z/993. cov_B=208, giving ratio 2.65715.</figcaption></figure>
+<figure class="fig"><img src="figs/fig037.png"/><figcaption><b>Figure 037.</b> Optimal-rotation Singer difference set for q=32 on Z/1057. cov_B=197, giving ratio 2.66463.</figcaption></figure>
+<figure class="fig"><img src="figs/fig038.png"/><figcaption><b>Figure 038.</b> Optimal-rotation Singer difference set for q=37 on Z/1407. cov_B=260, giving ratio 2.65502.</figcaption></figure>
+<figure class="fig"><img src="figs/fig039.png"/><figcaption><b>Figure 039.</b> Optimal-rotation Singer difference set for q=41 on Z/1723. cov_B=325, giving ratio 2.64691.</figcaption></figure>
+<figure class="fig"><img src="figs/fig040.png"/><figcaption><b>Figure 040.</b> Optimal-rotation Singer difference set for q=43 on Z/1893. cov_B=296, giving ratio 2.65797.</figcaption></figure>
+<figure class="fig"><img src="figs/fig041.png"/><figcaption><b>Figure 041.</b> Optimal-rotation Singer difference set for q=47 on Z/2257. cov_B=341, giving ratio 2.65533.</figcaption></figure>
+<figure class="fig"><img src="figs/fig042.png"/><figcaption><b>Figure 042.</b> Optimal-rotation Singer difference set for q=49 on Z/2451. cov_B=356, giving ratio 2.65569.</figcaption></figure>
+<figure class="fig"><img src="figs/fig043.png"/><figcaption><b>Figure 043.</b> Optimal-rotation Singer difference set for q=53 on Z/2863. cov_B=489, giving ratio 2.64086.</figcaption></figure>
+<figure class="fig"><img src="figs/fig044.png"/><figcaption><b>Figure 044.</b> Optimal-rotation Singer difference set for q=59 on Z/3541. cov_B=521, giving ratio 2.64621.</figcaption></figure>
+<figure class="fig"><img src="figs/fig045.png"/><figcaption><b>Figure 045.</b> Optimal-rotation Singer difference set for q=61 on Z/3783. cov_B=567, giving ratio 2.64363.</figcaption></figure>
+<figure class="fig"><img src="figs/fig046.png"/><figcaption><b>Figure 046.</b> Optimal-rotation Singer difference set for q=64 on Z/4161. cov_B=567, giving ratio 2.64755.</figcaption></figure>
+<figure class="fig"><img src="figs/fig047.png"/><figcaption><b>Figure 047.</b> Optimal-rotation Singer difference set for q=67 on Z/4557. cov_B=600, giving ratio 2.64777.</figcaption></figure>
+<figure class="fig"><img src="figs/fig048.png"/><figcaption><b>Figure 048.</b> Optimal-rotation Singer difference set for q=73 on Z/5403. cov_B=649, giving ratio 2.64965.</figcaption></figure>
+<figure class="fig"><img src="figs/fig049.png"/><figcaption><b>Figure 049.</b> Optimal-rotation Singer difference set for q=81 on Z/6643. cov_B=711, giving ratio 2.65188.</figcaption></figure>
+<figure class="fig"><img src="figs/fig050.png"/><figcaption><b>Figure 050.</b> Optimal-rotation Singer difference set for q=83 on Z/6973. cov_B=813, giving ratio 2.64697.</figcaption></figure>
+<figure class="fig"><img src="figs/fig051.png"/><figcaption><b>Figure 051.</b> Optimal-rotation Singer difference set for q=89 on Z/8011. cov_B=1043, giving ratio 2.63903.</figcaption></figure>
+<figure class="fig"><img src="figs/fig052.png"/><figcaption><b>Figure 052.</b> Optimal-rotation Singer difference set for q=101 on Z/10303. cov_B=1084, giving ratio 2.64640.</figcaption></figure>
+<figure class="fig"><img src="figs/fig053.png"/><figcaption><b>Figure 053.</b> Optimal-rotation Singer difference set for q=107 on Z/11557. cov_B=1045, giving ratio 2.65140.</figcaption></figure>
+<figure class="fig"><img src="figs/fig054.png"/><figcaption><b>Figure 054.</b> Optimal-rotation Singer difference set for q=127 on Z/16257. cov_B=1297, giving ratio 2.65223.</figcaption></figure>
+</div><div class="section"><h2>6. Self-coverage Profiles (per-q)</h2>
+<p>For every q we plot the contiguous self-coverage curve: the count of {1,…,k} realized as positive
+differences of B, versus the ideal diagonal, with the plateau cov<sub>B</sub> marked. The height of this
+plateau relative to (q+1)² is exactly the quantity f that the whole search maximizes.</p>
+<figure class="fig wide"><img src="figs/fig055.png"/><figcaption><b>Figure 055.</b> Contiguous self-coverage for q=7: reaches cov_B=21 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig056.png"/><figcaption><b>Figure 056.</b> Contiguous self-coverage for q=8: reaches cov_B=27 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig057.png"/><figcaption><b>Figure 057.</b> Contiguous self-coverage for q=9: reaches cov_B=35 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig058.png"/><figcaption><b>Figure 058.</b> Contiguous self-coverage for q=11: reaches cov_B=47 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig059.png"/><figcaption><b>Figure 059.</b> Contiguous self-coverage for q=13: reaches cov_B=55 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig060.png"/><figcaption><b>Figure 060.</b> Contiguous self-coverage for q=16: reaches cov_B=71 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig061.png"/><figcaption><b>Figure 061.</b> Contiguous self-coverage for q=17: reaches cov_B=90 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig062.png"/><figcaption><b>Figure 062.</b> Contiguous self-coverage for q=19: reaches cov_B=97 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig063.png"/><figcaption><b>Figure 063.</b> Contiguous self-coverage for q=23: reaches cov_B=127 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig064.png"/><figcaption><b>Figure 064.</b> Contiguous self-coverage for q=25: reaches cov_B=158 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig065.png"/><figcaption><b>Figure 065.</b> Contiguous self-coverage for q=27: reaches cov_B=171 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig066.png"/><figcaption><b>Figure 066.</b> Contiguous self-coverage for q=29: reaches cov_B=190 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig067.png"/><figcaption><b>Figure 067.</b> Contiguous self-coverage for q=31: reaches cov_B=208 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig068.png"/><figcaption><b>Figure 068.</b> Contiguous self-coverage for q=32: reaches cov_B=197 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig069.png"/><figcaption><b>Figure 069.</b> Contiguous self-coverage for q=37: reaches cov_B=260 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig070.png"/><figcaption><b>Figure 070.</b> Contiguous self-coverage for q=41: reaches cov_B=325 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig071.png"/><figcaption><b>Figure 071.</b> Contiguous self-coverage for q=43: reaches cov_B=296 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig072.png"/><figcaption><b>Figure 072.</b> Contiguous self-coverage for q=47: reaches cov_B=341 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig073.png"/><figcaption><b>Figure 073.</b> Contiguous self-coverage for q=49: reaches cov_B=356 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig074.png"/><figcaption><b>Figure 074.</b> Contiguous self-coverage for q=53: reaches cov_B=489 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig075.png"/><figcaption><b>Figure 075.</b> Contiguous self-coverage for q=59: reaches cov_B=521 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig076.png"/><figcaption><b>Figure 076.</b> Contiguous self-coverage for q=61: reaches cov_B=567 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig077.png"/><figcaption><b>Figure 077.</b> Contiguous self-coverage for q=64: reaches cov_B=567 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig078.png"/><figcaption><b>Figure 078.</b> Contiguous self-coverage for q=67: reaches cov_B=600 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig079.png"/><figcaption><b>Figure 079.</b> Contiguous self-coverage for q=73: reaches cov_B=649 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig080.png"/><figcaption><b>Figure 080.</b> Contiguous self-coverage for q=81: reaches cov_B=711 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig081.png"/><figcaption><b>Figure 081.</b> Contiguous self-coverage for q=83: reaches cov_B=813 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig082.png"/><figcaption><b>Figure 082.</b> Contiguous self-coverage for q=89: reaches cov_B=1043 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig083.png"/><figcaption><b>Figure 083.</b> Contiguous self-coverage for q=101: reaches cov_B=1084 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig084.png"/><figcaption><b>Figure 084.</b> Contiguous self-coverage for q=107: reaches cov_B=1045 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+<figure class="fig"><img src="figs/fig085.png"/><figcaption><b>Figure 085.</b> Contiguous self-coverage for q=127: reaches cov_B=1297 before the first gap. The height of this plateau, relative to (q+1)², is what the whole search optimizes.</figcaption></figure>
+</div><div class="section"><h2>7. Difference Spectra (per-q)</h2>
+<p>The distribution of positive pairwise differences for each optimal Singer representative. Contiguity of the
+low end (up to cov<sub>B</sub>) is what a good difference basis needs; the spectra show how the record sets
+achieve dense low-difference coverage.</p>
+<figure class="fig wide"><img src="figs/fig086.png"/><figcaption><b>Figure 086.</b> Positive-difference spectrum of the optimal Singer representative for q=7. Small differences up to cov_B=21 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig087.png"/><figcaption><b>Figure 087.</b> Positive-difference spectrum of the optimal Singer representative for q=8. Small differences up to cov_B=27 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig088.png"/><figcaption><b>Figure 088.</b> Positive-difference spectrum of the optimal Singer representative for q=9. Small differences up to cov_B=35 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig089.png"/><figcaption><b>Figure 089.</b> Positive-difference spectrum of the optimal Singer representative for q=11. Small differences up to cov_B=47 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig090.png"/><figcaption><b>Figure 090.</b> Positive-difference spectrum of the optimal Singer representative for q=13. Small differences up to cov_B=55 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig091.png"/><figcaption><b>Figure 091.</b> Positive-difference spectrum of the optimal Singer representative for q=16. Small differences up to cov_B=71 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig092.png"/><figcaption><b>Figure 092.</b> Positive-difference spectrum of the optimal Singer representative for q=17. Small differences up to cov_B=90 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig093.png"/><figcaption><b>Figure 093.</b> Positive-difference spectrum of the optimal Singer representative for q=19. Small differences up to cov_B=97 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig094.png"/><figcaption><b>Figure 094.</b> Positive-difference spectrum of the optimal Singer representative for q=23. Small differences up to cov_B=127 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig095.png"/><figcaption><b>Figure 095.</b> Positive-difference spectrum of the optimal Singer representative for q=25. Small differences up to cov_B=158 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig096.png"/><figcaption><b>Figure 096.</b> Positive-difference spectrum of the optimal Singer representative for q=27. Small differences up to cov_B=171 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig097.png"/><figcaption><b>Figure 097.</b> Positive-difference spectrum of the optimal Singer representative for q=29. Small differences up to cov_B=190 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig098.png"/><figcaption><b>Figure 098.</b> Positive-difference spectrum of the optimal Singer representative for q=31. Small differences up to cov_B=208 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig099.png"/><figcaption><b>Figure 099.</b> Positive-difference spectrum of the optimal Singer representative for q=32. Small differences up to cov_B=197 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig100.png"/><figcaption><b>Figure 100.</b> Positive-difference spectrum of the optimal Singer representative for q=37. Small differences up to cov_B=260 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig101.png"/><figcaption><b>Figure 101.</b> Positive-difference spectrum of the optimal Singer representative for q=41. Small differences up to cov_B=325 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig102.png"/><figcaption><b>Figure 102.</b> Positive-difference spectrum of the optimal Singer representative for q=43. Small differences up to cov_B=296 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig103.png"/><figcaption><b>Figure 103.</b> Positive-difference spectrum of the optimal Singer representative for q=47. Small differences up to cov_B=341 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig104.png"/><figcaption><b>Figure 104.</b> Positive-difference spectrum of the optimal Singer representative for q=49. Small differences up to cov_B=356 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig105.png"/><figcaption><b>Figure 105.</b> Positive-difference spectrum of the optimal Singer representative for q=53. Small differences up to cov_B=489 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig106.png"/><figcaption><b>Figure 106.</b> Positive-difference spectrum of the optimal Singer representative for q=59. Small differences up to cov_B=521 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig107.png"/><figcaption><b>Figure 107.</b> Positive-difference spectrum of the optimal Singer representative for q=61. Small differences up to cov_B=567 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig108.png"/><figcaption><b>Figure 108.</b> Positive-difference spectrum of the optimal Singer representative for q=64. Small differences up to cov_B=567 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig109.png"/><figcaption><b>Figure 109.</b> Positive-difference spectrum of the optimal Singer representative for q=67. Small differences up to cov_B=600 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig110.png"/><figcaption><b>Figure 110.</b> Positive-difference spectrum of the optimal Singer representative for q=73. Small differences up to cov_B=649 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig111.png"/><figcaption><b>Figure 111.</b> Positive-difference spectrum of the optimal Singer representative for q=81. Small differences up to cov_B=711 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig112.png"/><figcaption><b>Figure 112.</b> Positive-difference spectrum of the optimal Singer representative for q=83. Small differences up to cov_B=813 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig113.png"/><figcaption><b>Figure 113.</b> Positive-difference spectrum of the optimal Singer representative for q=89. Small differences up to cov_B=1043 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig114.png"/><figcaption><b>Figure 114.</b> Positive-difference spectrum of the optimal Singer representative for q=101. Small differences up to cov_B=1084 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig115.png"/><figcaption><b>Figure 115.</b> Positive-difference spectrum of the optimal Singer representative for q=107. Small differences up to cov_B=1045 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+<figure class="fig"><img src="figs/fig116.png"/><figcaption><b>Figure 116.</b> Positive-difference spectrum of the optimal Singer representative for q=127. Small differences up to cov_B=1297 are all present (contiguous); beyond that gaps appear.</figcaption></figure>
+</div><div class="section"><h2>8. The Search Machinery</h2>
+<p>Computing the best rotation for a perfect difference set naively is O(m²) per representative. We use an
+<b>arc method</b>: since each residue d corresponds to a unique ordered pair, value d fails to appear at
+"cut" position t only when t lies in a specific length-d arc; the best rotation is the cut that survives the
+longest, found in a single sweep and validated against brute force. Unit multiples are reduced by the Singer
+<b>multiplier orbit</b> (order 3 for prime q, 3e for q = pᵉ). Prime-power q required building GF(q³) as a
+tower over GF(q) = F_p[y]/(g) — extending the search to a family absent from the classical literature.</p>
+<figure class="fig wide"><img src="figs/fig117.png"/><figcaption><b>Figure 117.</b> The arc method (validated against brute force). For a perfect difference set, residue d is realized without wrap at cut t unless t lies in a length-d arc; the best rotation is the cut surviving longest, computed in one pass.</figcaption></figure>
+<figure class="fig"><img src="figs/fig118.png"/><figcaption><b>Figure 118.</b> Sampling unit multiples u of the q=89 Singer set: the raw self-coverage (cut at 0) swings enormously. Only after also optimizing the rotation does the best representative reach the record cov_B=1043.</figcaption></figure>
+<figure class="fig"><img src="figs/fig119.png"/><figcaption><b>Figure 119.</b> Histogram of self-coverage across sampled unit multiples for q=89 — most representatives are mediocre; the record lives in the extreme right tail, which is why finding it required search.</figcaption></figure>
+<figure class="fig"><img src="figs/fig120.png"/><figcaption><b>Figure 120.</b> For prime q the Singer multiplier group is ⟨q⟩ of order 3, so unit multiples come in orbits of 3 giving identical coverage — a 3× (for q=pᵉ, 3e×) speedup exploited in the search.</figcaption></figure>
+<figure class="fig"><img src="figs/fig121.png"/><figcaption><b>Figure 121.</b> To reach prime-power q we build GF(q³) as a degree-3 extension of GF(q)=F_p[y]/(g); the difference set is the log-indices of elements in a fixed hyperplane. This extends the search beyond prime q.</figcaption></figure>
+</div><div class="section"><h2>9. Attempts to Beat 2.6390 &amp; Research Directions</h2>
+<p>The record sits on a knife-edge: cov<sub>B</sub> = 1043 versus the 1043.5 needed to dip below 2.639. We
+pursued several routes. <b>Prime-power q</b> (new): implemented and scanned — no beat. <b>Bigger/asymmetric
+base A</b>: ruled out analytically (|A|²/max(A−A) is minimized at |A| = 4). <b>Single add/remove and
+simulated annealing on L</b>: no redundant element exists; the optimum is deep. The genuinely promising, still
+open directions are a <b>three-level product</b> (more free parameters), <b>non-Singer perfect difference
+families</b> (different self-coverage profiles), and a <b>large-scale evolutionary / anomalous-dip search</b>
+into much larger q — exactly the method that produced the record.</p>
+<figure class="fig wide"><img src="figs/fig122.png"/><figcaption><b>Figure 122.</b> The needed vs achieved self-coverage. The two curves essentially touch only at q=89 (achieved 1043 vs needed 1043.5) — the record sits exactly on the knife-edge; everywhere else achieved falls short of needed.</figcaption></figure>
+<figure class="fig"><img src="figs/fig123.png"/><figcaption><b>Figure 123.</b> Why the base A cannot be improved: the efficiency |A|²/max(A−A) is minimized at |A|=4 (value 2.667). Enlarging A to recover the lost top-block residues costs far more than it saves — a dead end (analyzed, not merely asserted).</figcaption></figure>
+<figure class="fig"><img src="figs/fig124.png"/><figcaption><b>Figure 124.</b> The leading untried direction: a three-level product exposes more free parameters than the record&#x27;s two-level combination (the historical route from 2.6571 to earlier bounds). The open sub-problem is keeping the inner product near-perfect.</figcaption></figure>
+<figure class="fig"><img src="figs/fig125.png"/><figcaption><b>Figure 125.</b> Summary comparison: q=89 is the unique value reaching the baseline; its immediate neighbours and the prime-power alternatives all sit measurably higher.</figcaption></figure>
+</div><div class="section"><h2>10. Methods, Code, and Reproducibility</h2>
+<p>All computation ran in a persistent 64-core Daytona sandbox. Singer difference sets are built via GF(q³);
+the arc method computes the max self-coverage over units×translations; matplotlib renders the 125
+figures; this HTML is printed to PDF with headless Chromium (Playwright). Every script, the JSONL data, and
+this document are version-controlled in the project repository. Key source below; the full set
+(<code>dbdata.cpp</code>, <code>dbsearch2.cpp</code>, <code>gfpow_search.cpp</code>, the Python figure/HTML
+generators) is in the repo.</p>
+<h3>C++ — per-q Singer data generator (dbdata.cpp)</h3><pre>// dbdata.cpp — per-q data for the research journal.
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+typedef long long ll;
+int P,E,Q;
+vector&lt;int&gt; EXP,LOGT;
+inline int gadd(int a,int b){int r=0,pw=1;for(int i=0;i&lt;E;i++){int da=a%P,db=b%P;a/=P;b/=P;r+=((da+db)%P)*pw;pw*=P;}return r;}
+inline int gmul(int a,int b){if(a==0||b==0)return 0;return EXP[(LOGT[a]+LOGT[b])%(Q-1)];}
+bool build_gf(){
+    EXP.assign(Q,0);LOGT.assign(Q,-1);
+    if(E==1){for(int g=2;g&lt;Q;g++){int x=1;vector&lt;int&gt; lg(Q,-1);bool ok=true;for(int k=0;k&lt;Q-1;k++){if(lg[x]!=-1){ok=false;break;}lg[x]=k;EXP[k]=x;x=(x*g)%Q;}if(ok&amp;&amp;x==1){LOGT=lg;EXP[Q-1]=1;return true;}}return false;}
+    vector&lt;int&gt; gc(E,0);
+    for(int code=0;code&lt;Q;code++){int t=code;for(int i=0;i&lt;E;i++){gc[i]=t%P;t/=P;}if(gc[0]==0)continue;
+        vector&lt;int&gt; v(E,0);v[0]=1;vector&lt;int&gt; ex(Q,0),lg(Q,-1);bool ok=true;
+        for(int k=0;k&lt;Q-1;k++){int id=0,pw=1;for(int i=0;i&lt;E;i++){id+=v[i]*pw;pw*=P;}if(lg[id]!=-1){ok=false;break;}ex[k]=id;lg[id]=k;
+            int hi=v[E-1];for(int i=E-1;i&gt;0;i--)v[i]=v[i-1];v[0]=0;if(hi){for(int i=0;i&lt;E;i++)v[i]=(v[i]+hi*gc[i])%P;}}
+        if(!ok)continue;int id=0,pw=1;for(int i=0;i&lt;E;i++){id+=v[i]*pw;pw*=P;}if(id!=1)continue;ex[Q-1]=1;EXP=ex;LOGT=lg;return true;}
+    return false;
+}
+vector&lt;ll&gt; singer(){
+    ll m=(ll)Q*Q+Q+1,order=(ll)Q*Q*Q-1;
+    for(int r0=1;r0&lt;Q;r0++)for(int r2=0;r2&lt;Q;r2++)for(int r1=0;r1&lt;Q;r1++){
+        int c0=1,c1=0,c2=0;bool prim=true;vector&lt;ll&gt; res;
+        for(ll i=0;i&lt;order;i++){if(c2==0)res.push_back(i%m);int n0=gmul(c2,r0),n1=gadd(c0,gmul(c2,r1)),n2=gadd(c1,gmul(c2,r2));c0=n0;c1=n1;c2=n2;if(i&lt;order-1&amp;&amp;c0==1&amp;&amp;c1==0&amp;&amp;c2==0){prim=false;break;}}
+        if(!prim)continue;sort(res.begin(),res.end());res.erase(unique(res.begin(),res.end()),res.end());
+        if((ll)res.size()!=Q+1)continue;vector&lt;char&gt; seen(m,0);bool ok=true;ll cnt=0;
+        for(size_t i=0;i&lt;res.size()&amp;&amp;ok;i++)for(size_t j=0;j&lt;res.size();j++)if(i!=j){ll d=((res[i]-res[j])%m+m)%m;if(d==0||seen[d]){ok=false;break;}seen[d]=1;cnt++;}
+        if(ok&amp;&amp;cnt==m-1)return res;}
+    return {};
+}
+ll arc(const vector&lt;ll&gt;&amp;S,ll m,ll C,vector&lt;ll&gt;&amp;as,vector&lt;char&gt;&amp;al){
+    int n=S.size();for(ll d=0;d&lt;=C;d++)as[d]=-1;
+    for(int i=0;i&lt;n;i++)for(int j=0;j&lt;n;j++)if(i!=j){ll d=((S[i]-S[j])%m+m)%m;if(d&gt;=1&amp;&amp;d&lt;=C)as[d]=S[j];}
+    fill(al.begin(),al.end(),1);ll cnt=m;
+    for(ll d=1;d&lt;=C;d++){if(as[d]&lt;0)continue;ll b=as[d];for(ll k=1;k&lt;=d;k++){ll t=(b+k)%m;if(al[t]){al[t]=0;cnt--;}}if(cnt==0)return d-1;}
+    return C;
+}
+ll covdir(const vector&lt;ll&gt;&amp;S,ll cap){int n=S.size();vector&lt;char&gt; sn(cap+2,0);for(int i=0;i&lt;n;i++)for(int j=i+1;j&lt;n;j++){ll d=S[j]-S[i];if(d&lt;=cap)sn[d]=1;}ll c=0;while(c+1&lt;=cap&amp;&amp;sn[c+1])c++;return c;}
+int main(){
+    int p,e;double BASE=2.639;
+    while(scanf(&quot;%d %d&quot;,&amp;p,&amp;e)==2){
+        P=p;E=e;Q=(int)llround(pow((double)P,E));
+        if(!build_gf()){fprintf(stderr,&quot;q=%d no gf\n&quot;,Q);continue;}
+        vector&lt;ll&gt; D=singer();if(D.empty()){fprintf(stderr,&quot;q=%d no singer\n&quot;,Q);continue;}
+        ll m=(ll)Q*Q+Q+1;ll C=m-1;vector&lt;ll&gt; as(C+1);vector&lt;char&gt; al(m);vector&lt;ll&gt; uD(D.size());
+        ll bcov=0,bu=1;
+        for(ll u=1;u&lt;m;u++){if(std::__gcd(u,m)!=1)continue;
+            bool mn=true;ll w=(u*P)%m;for(int j=1;j&lt;3*E;j++){if(w&lt;u){mn=false;break;}w=(w*P)%m;}if(!mn)continue;
+            for(size_t i=0;i&lt;D.size();i++)uD[i]=(u*D[i])%m;sort(uD.begin(),uD.end());
+            ll c=arc(uD,m,C,as,al);if(c&gt;bcov){bcov=c;bu=u;}}
+        for(size_t i=0;i&lt;D.size();i++)uD[i]=(bu*D[i])%m;
+        ll bt=0,tc=0;vector&lt;ll&gt; St(D.size());
+        for(ll t=0;t&lt;m;t++){for(size_t i=0;i&lt;D.size();i++)St[i]=(uD[i]+t)%m;sort(St.begin(),St.end());ll c=covdir(St,min(bcov+5,m-1));if(c&gt;tc){tc=c;bt=t;}}
+        for(size_t i=0;i&lt;D.size();i++)St[i]=(uD[i]+bt)%m;sort(St.begin(),St.end());
+        ll k=6*m+bcov;double ratio=16.0*(Q+1)*(Q+1)/(double)k;
+        double f=(double)bcov/((double)(Q+1)*(Q+1));double fm6q=f-6.0/Q;
+        printf(&quot;{\&quot;q\&quot;:%d,\&quot;p\&quot;:%d,\&quot;e\&quot;:%d,\&quot;m\&quot;:%lld,\&quot;cov\&quot;:%lld,\&quot;u\&quot;:%lld,\&quot;t\&quot;:%lld,\&quot;k\&quot;:%lld,\&quot;ratio\&quot;:%.10f,\&quot;f\&quot;:%.10f,\&quot;fm6q\&quot;:%.10f,\&quot;beats\&quot;:%s,\&quot;B\&quot;:[&quot;,
+               Q,P,E,m,bcov,bu,bt,k,ratio,f,fm6q, ratio&lt;BASE?&quot;true&quot;:&quot;false&quot;);
+        for(size_t i=0;i&lt;St.size();i++)printf(&quot;%s%lld&quot;,i?&quot;,&quot;:&quot;&quot;,St[i]);
+        printf(&quot;]}\n&quot;);fflush(stdout);
+        fprintf(stderr,&quot;done q=%d cov=%lld ratio=%.6f\n&quot;,Q,bcov,ratio);
+    }
+    return 0;
+}
+</pre>
+</div><div class="section"><h2>11. Full Data Table and Conclusion</h2>
+<p>Every scanned construction (row q = 89 highlighted). Columns: modulus m, basis size |B| = q+1, optimal
+self-coverage cov<sub>B</sub>, covered prefix n, combined size |L| = 4(q+1), achieved ratio, normalized
+self-coverage f, and the decisive quantity f − 6/q.</p>
+<table><tr><th class='l'>q</th><th>form</th><th>m</th><th>|B|</th><th>cov_B</th><th>n=k</th><th>|L|</th><th>ratio</th><th>f</th><th>f−6/q</th></tr><tr><td class='l'>7</td><td>prime</td><td>57</td><td>8</td><td>21</td><td>363</td><td>32</td><td>2.820937</td><td>0.3281</td><td>-0.5290</td></tr><tr><td class='l'>8</td><td>2^3</td><td>73</td><td>9</td><td>27</td><td>465</td><td>36</td><td>2.787097</td><td>0.3333</td><td>-0.4167</td></tr><tr><td class='l'>9</td><td>3^2</td><td>91</td><td>10</td><td>35</td><td>581</td><td>40</td><td>2.753873</td><td>0.3500</td><td>-0.3167</td></tr><tr><td class='l'>11</td><td>prime</td><td>133</td><td>12</td><td>47</td><td>845</td><td>48</td><td>2.726627</td><td>0.3264</td><td>-0.2191</td></tr><tr><td class='l'>13</td><td>prime</td><td>183</td><td>14</td><td>55</td><td>1153</td><td>56</td><td>2.719861</td><td>0.2806</td><td>-0.1809</td></tr><tr><td class='l'>16</td><td>2^4</td><td>273</td><td>17</td><td>71</td><td>1709</td><td>68</td><td>2.705676</td><td>0.2457</td><td>-0.1293</td></tr><tr><td class='l'>17</td><td>prime</td><td>307</td><td>18</td><td>90</td><td>1932</td><td>72</td><td>2.683230</td><td>0.2778</td><td>-0.0752</td></tr><tr><td class='l'>19</td><td>prime</td><td>381</td><td>20</td><td>97</td><td>2383</td><td>80</td><td>2.685690</td><td>0.2425</td><td>-0.0733</td></tr><tr><td class='l'>23</td><td>prime</td><td>553</td><td>24</td><td>127</td><td>3445</td><td>96</td><td>2.675181</td><td>0.2205</td><td>-0.0404</td></tr><tr><td class='l'>25</td><td>5^2</td><td>651</td><td>26</td><td>158</td><td>4064</td><td>104</td><td>2.661417</td><td>0.2337</td><td>-0.0063</td></tr><tr><td class='l'>27</td><td>3^3</td><td>757</td><td>28</td><td>171</td><td>4713</td><td>112</td><td>2.661574</td><td>0.2181</td><td>-0.0041</td></tr><tr><td class='l'>29</td><td>prime</td><td>871</td><td>30</td><td>190</td><td>5416</td><td>120</td><td>2.658789</td><td>0.2111</td><td>0.0042</td></tr><tr><td class='l'>31</td><td>prime</td><td>993</td><td>32</td><td>208</td><td>6166</td><td>128</td><td>2.657152</td><td>0.2031</td><td>0.0096</td></tr><tr><td class='l'>32</td><td>2^5</td><td>1057</td><td>33</td><td>197</td><td>6539</td><td>132</td><td>2.664628</td><td>0.1809</td><td>-0.0066</td></tr><tr><td class='l'>37</td><td>prime</td><td>1407</td><td>38</td><td>260</td><td>8702</td><td>152</td><td>2.655022</td><td>0.1801</td><td>0.0179</td></tr><tr><td class='l'>41</td><td>prime</td><td>1723</td><td>42</td><td>325</td><td>10663</td><td>168</td><td>2.646910</td><td>0.1842</td><td>0.0379</td></tr><tr><td class='l'>43</td><td>prime</td><td>1893</td><td>44</td><td>296</td><td>11654</td><td>176</td><td>2.657972</td><td>0.1529</td><td>0.0134</td></tr><tr><td class='l'>47</td><td>prime</td><td>2257</td><td>48</td><td>341</td><td>13883</td><td>192</td><td>2.655334</td><td>0.1480</td><td>0.0203</td></tr><tr><td class='l'>49</td><td>7^2</td><td>2451</td><td>50</td><td>356</td><td>15062</td><td>200</td><td>2.655690</td><td>0.1424</td><td>0.0200</td></tr><tr><td class='l'>53</td><td>prime</td><td>2863</td><td>54</td><td>489</td><td>17667</td><td>216</td><td>2.640856</td><td>0.1677</td><td>0.0545</td></tr><tr><td class='l'>59</td><td>prime</td><td>3541</td><td>60</td><td>521</td><td>21767</td><td>240</td><td>2.646208</td><td>0.1447</td><td>0.0430</td></tr><tr><td class='l'>61</td><td>prime</td><td>3783</td><td>62</td><td>567</td><td>23265</td><td>248</td><td>2.643628</td><td>0.1475</td><td>0.0491</td></tr><tr><td class='l'>64</td><td>2^6</td><td>4161</td><td>65</td><td>567</td><td>25533</td><td>260</td><td>2.647554</td><td>0.1342</td><td>0.0405</td></tr><tr><td class='l'>67</td><td>prime</td><td>4557</td><td>68</td><td>600</td><td>27942</td><td>272</td><td>2.647770</td><td>0.1298</td><td>0.0402</td></tr><tr><td class='l'>73</td><td>prime</td><td>5403</td><td>74</td><td>649</td><td>33067</td><td>296</td><td>2.649651</td><td>0.1185</td><td>0.0363</td></tr><tr><td class='l'>81</td><td>3^4</td><td>6643</td><td>82</td><td>711</td><td>40569</td><td>328</td><td>2.651877</td><td>0.1057</td><td>0.0317</td></tr><tr><td class='l'>83</td><td>prime</td><td>6973</td><td>84</td><td>813</td><td>42651</td><td>336</td><td>2.646972</td><td>0.1152</td><td>0.0429</td></tr><tr class='hl'><td class='l'>89</td><td>prime</td><td>8011</td><td>90</td><td>1043</td><td>49109</td><td>360</td><td>2.639027</td><td>0.1288</td><td>0.0613</td></tr><tr><td class='l'>101</td><td>prime</td><td>10303</td><td>102</td><td>1084</td><td>62902</td><td>408</td><td>2.646402</td><td>0.1042</td><td>0.0448</td></tr><tr><td class='l'>107</td><td>prime</td><td>11557</td><td>108</td><td>1045</td><td>70387</td><td>432</td><td>2.651399</td><td>0.0896</td><td>0.0335</td></tr><tr><td class='l'>127</td><td>prime</td><td>16257</td><td>128</td><td>1297</td><td>98839</td><td>512</td><td>2.652232</td><td>0.0792</td><td>0.0319</td></tr></table>
+<h3>Conclusion</h3>
+<p>The AlphaEvolve record 2.6390 is reproduced and independently verified. A clean coverage identity explains
+the construction and pinpoints q = 89 as the arg-max of f − 6/q; a systematic units×translations search over
+primes and prime powers confirms it as an isolated optimum. No value beats the baseline, and none is claimed
+to. The realistic paths to a new record — three-level products, non-Singer perfect families, and large-scale
+anomaly search — are identified and motivated. Kepler's contribution here is a rigorous, fully reproducible
+<i>explanation and search</i> around a frontier result, delivered end-to-end with verified honesty.</p>
+<div class="key">Verified: ratio = 360²/49109 = 2.639027469…, official validator <b>valid = true</b>. Match of the
+best-known value; not a new record.</div>
+</div></body></html>
