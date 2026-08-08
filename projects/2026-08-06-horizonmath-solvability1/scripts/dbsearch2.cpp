@@ -55,6 +55,8 @@ int main(int argc,char**argv){
         long long bcov=0,bu=1;
         for(long long u=1;u<m;u++){
             if(std::__gcd(u,m)!=1) continue;
+            // multiplier-orbit reduction: q is a multiplier (u*q ~ translate of u*D), skip non-minimal
+            long long uq1=(u*q)%m, uq2=(uq1*q)%m; if(uq1<u||uq2<u) continue;
             for(size_t i=0;i<D.size();i++) uD[i]=(u*D[i])%m;
             sort(uD.begin(),uD.end());
             long long c=arc_maxcov(uD,m,C,arcstart,alive);
