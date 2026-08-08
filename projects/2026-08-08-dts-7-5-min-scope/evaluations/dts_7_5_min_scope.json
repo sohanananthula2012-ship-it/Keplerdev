@@ -1,0 +1,23 @@
+{
+  "problem_id": "dts_7_5_min_scope",
+  "problem_index": 75,
+  "problem_title": "dts_7_5_min_scope",
+  "valid": true,
+  "validator_message": "Valid (7,5)-DTS.",
+  "validator_metrics": {
+    "metrics": {
+      "scope": 112
+    }
+  },
+  "baseline_comparison": {
+    "result": "no_baseline",
+    "achieved_value": null,
+    "baseline_value": 112.0,
+    "direction": "minimize",
+    "metric_name": "Scope (maximum entry) of a valid (7,5)-Difference Triangle Set",
+    "improvement_percent": null,
+    "notes": "Could not extract relevant metric from: {'metrics': {'scope': 112}}"
+  },
+  "error_type": null,
+  "error_message": null
+}
