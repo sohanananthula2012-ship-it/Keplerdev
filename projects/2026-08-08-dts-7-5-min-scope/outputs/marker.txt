@@ -1,0 +1,3 @@
+dts_7_5_min_scope dedicated project
+started Sat Aug  8 12:52:07 UTC 2026 UTC
+target: valid (7,5)-DTS scope<=111 (record 112, Shehadeh-Kingsford-Kschischang 2026)
