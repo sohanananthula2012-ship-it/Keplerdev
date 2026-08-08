@@ -1,10 +1,6 @@
 """Koubi-style DTS(7,5) search: recursive cross-row backtracking with
-Gaussian-weighted candidate ordering inside each row's DFS.
-
-- Candidate mark order at position j: Efraimidis-Spirakis weighted sampling with
-  weight = Normal_pdf(v; mu[j], sigma[j]); mu=None => uniform (for training).
-- Proper recursive backtracking across the 7 rows (like a working DFS solver).
-- Params trained on easy larger-scope DTSs, scaled by M/M'.
+Gaussian-weighted candidate ordering, and SHORT per-attempt deadlines so a
+runaway recursion is abandoned and restarted (the key reliability fix).
 """
 import sys, json, time, random, math
 
@@ -26,8 +22,7 @@ def _order(cands, mu_j, sig_j, rng):
 
 
 def build_row(used, mu, sigma, M, rng, deadline, node_cap):
-    marks = [0]
-    nodes = [0]
+    marks = [0]; nodes = [0]
 
     def rec(depth, dm):
         if nodes[0] > node_cap or time.time() > deadline:
@@ -63,7 +58,7 @@ def build_row(used, mu, sigma, M, rng, deadline, node_cap):
     return (list(marks), dm) if dm is not None else None
 
 
-def build_dts(M, mu, sigma, rng, deadline, row_tries=30, node_cap=8000):
+def build_dts(M, mu, sigma, rng, deadline, row_tries=8, node_cap=8000):
     rows = []; dmasks = []
 
     def rec(row_idx, used):
@@ -80,16 +75,28 @@ def build_dts(M, mu, sigma, rng, deadline, row_tries=30, node_cap=8000):
             if rec(row_idx + 1, used | dm):
                 return True
             rows.pop(); dmasks.pop()
+            if time.time() > deadline:
+                return False
         return False
 
     return rows[:] if rec(0, 0) else None
 
 
-def train_params(Mp, n_dts, rng, time_budget):
+def verify(rows):
+    ds = []
+    for r in rows:
+        for a in range(NM):
+            for b in range(a + 1, NM):
+                ds.append(r[b] - r[a])
+    return len(set(ds)) == len(ds) and all(d > 0 for d in ds), max(max(r) for r in rows)
+
+
+def train_params(Mp, n_dts, rng, time_budget, attempt=1.5):
     t0 = time.time()
     samp = [[] for _ in range(NM)]; found = 0
     while found < n_dts and time.time() - t0 < time_budget:
-        rows = build_dts(Mp, None, None, rng, deadline=t0 + time_budget)
+        dl = min(t0 + time_budget, time.time() + attempt)
+        rows = build_dts(Mp, None, None, rng, deadline=dl)
         if rows:
             found += 1
             for r in rows:
@@ -111,21 +118,13 @@ def scale_params(mu, sigma, Mp, M, infl=1.0):
     return [x * f for x in mu], [s * f * infl for s in sigma]
 
 
-def verify(rows):
-    ds = []
-    for r in rows:
-        for a in range(NM):
-            for b in range(a + 1, NM):
-                ds.append(r[b] - r[a])
-    return len(set(ds)) == len(ds) and all(d > 0 for d in ds), max(max(r) for r in rows)
-
-
-def search(M, tlimit, mu, sigma, seed):
+def search(M, tlimit, mu, sigma, seed, attempt=3.0):
     rng = random.Random(seed)
     t0 = time.time(); deadline = t0 + tlimit; tries = 0
     while time.time() < deadline:
         tries += 1
-        rows = build_dts(M, mu, sigma, rng, deadline)
+        dl = min(deadline, time.time() + attempt)
+        rows = build_dts(M, mu, sigma, rng, deadline=dl)
         if rows:
             ok, sc = verify(rows)
             if ok and sc <= M:
@@ -135,10 +134,10 @@ def search(M, tlimit, mu, sigma, seed):
 
 if __name__ == "__main__":
     M = int(sys.argv[1]); tl = float(sys.argv[2])
-    Mp = int(sys.argv[3]) if len(sys.argv) > 3 else 130
+    Mp = int(sys.argv[3]) if len(sys.argv) > 3 else 150
     seed = int(sys.argv[4]) if len(sys.argv) > 4 else 0
     rng = random.Random(seed)
-    mu, sigma, nf = train_params(Mp, 80, rng, time_budget=min(20, tl / 3))
+    mu, sigma, nf = train_params(Mp, 200, rng, time_budget=min(20, tl / 3))
     print(f"# trained {nf} at M'={Mp} mu={[round(x) for x in mu]} sig={[round(x,1) for x in sigma]}",
           file=sys.stderr)
     mu2, s2 = scale_params(mu, sigma, Mp, M, 1.1)
