@@ -1,0 +1,24 @@
+{
+  "problem_id": "keich_thin_triangles_128",
+  "problem_index": 72,
+  "problem_title": "keich_thin_triangles_128",
+  "valid": true,
+  "validator_message": "Valid. Union area=0.119207265425702, baseline=0.119207265425702.",
+  "validator_metrics": {
+    "area": 0.11920726542570158,
+    "baseline": 0.11920726542570154,
+    "N": 128,
+    "delta": 0.0078125
+  },
+  "baseline_comparison": {
+    "result": "below_baseline",
+    "achieved_value": 0.11920726542570158,
+    "baseline_value": 0.1148103258186177,
+    "direction": "minimize",
+    "metric_name": "Area of union of 128 thin triangles (Kakeya-type construction)",
+    "improvement_percent": -3.83,
+    "notes": null
+  },
+  "error_type": null,
+  "error_message": null
+}
