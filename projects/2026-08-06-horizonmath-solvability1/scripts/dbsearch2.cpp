@@ -1,8 +1,7 @@
 // dbsearch2.cpp — difference-basis search over prime q, units, translations.
-// Singer difference set D mod m=q^2+q+1 (VERIFIED perfect). For each unit u,
-// max contiguous positive-diff coverage over translations via arc method.
-// A={0,1,4,6} (A-A=[-6,6]): k=6m+cov, |L|=4(q+1), ratio=|L|^2/k.
-// Best candidate per q is brute-force reconstructed & verified. Record=2.6390 (baseline 2.639).
+// Singer difference set D mod m=q^2+q+1 (VERIFIED perfect). For each UNIT u (gcd(u,m)=1),
+// max contiguous positive-diff coverage over translations via arc method (C=m-1, early-exit).
+// A={0,1,4,6} (A-A=[-6,6]): k=6m+cov, |L|=4(q+1), ratio=|L|^2/k. Beat baseline 2.639 if ratio<2.639.
 #include <bits/stdc++.h>
 using namespace std;
 static bool is_prime(long long n){if(n<2)return false;for(long long i=2;i*i<=n;i++)if(n%i==0)return false;return true;}
@@ -18,7 +17,6 @@ vector<long long> singer(long long q){
         if(!prim) continue;
         sort(res.begin(),res.end()); res.erase(unique(res.begin(),res.end()),res.end());
         if((long long)res.size()!=q+1) continue;
-        // verify perfect difference set
         vector<char> seen(m,0); bool ok=true; long long cnt=0;
         for(size_t i=0;i<res.size()&&ok;i++)for(size_t j=0;j<res.size();j++) if(i!=j){
             long long d=((res[i]-res[j])%m+m)%m; if(d==0||seen[d]){ok=false;break;} seen[d]=1; cnt++;
@@ -27,7 +25,6 @@ vector<long long> singer(long long q){
     }
     return {};
 }
-// arc method: max cov over translations for perfect set S mod m, cap C. returns cov (<=C).
 long long arc_maxcov(const vector<long long>&S,long long m,long long C,vector<long long>&arcstart,vector<char>&alive){
     int n=S.size();
     for(long long d=0;d<=C;d++) arcstart[d]=-1;
@@ -43,43 +40,34 @@ long long arc_maxcov(const vector<long long>&S,long long m,long long C,vector<lo
     }
     return C;
 }
-// direct cov of set S (residues) cut at 0: contiguous positive-diff coverage
-long long covB_direct(const vector<long long>&S,long long cap){
-    int n=S.size(); vector<char> seen(cap+2,0);
-    for(int i=0;i<n;i++)for(int j=i+1;j<n;j++){ long long d=S[j]-S[i]; if(d<=cap) seen[d]=1; }
-    long long c=0; while(c+1<=cap && seen[c+1]) c++; return c;
-}
 int main(int argc,char**argv){
     long long qlo=atoi(argv[1]), qhi=atoi(argv[2]);
-    double RECORD=2.6390274695, BASELINE=2.639;
-    double gbest=1e9; long long gq=0,gu=0,gt=0,gcov=0;
+    double BASELINE=2.639;
+    double gbest=1e9; long long gq=0,gu=0,gcov=0;
     for(long long q=qlo;q<=qhi;q++){
         if(!is_prime(q)) continue;
         long long m=q*q+q+1;
         vector<long long> D=singer(q);
         if(D.empty()){fprintf(stderr,"q=%lld no singer\n",q);continue;}
-        // cov needed to beat baseline 2.639: 16(q+1)^2/2.639 - 6m
         double reqd=16.0*(q+1)*(q+1)/BASELINE-6.0*m;
-        long long C=m-1;  // full cap: with a perfect set the count==0 early-exit keeps it fast
+        long long C=m-1;
         vector<long long> arcstart(C+1); vector<char> alive(m); vector<long long> uD(D.size());
         long long bcov=0,bu=1;
         for(long long u=1;u<m;u++){
-            if(std::__gcd(u,m)!=1) continue; // only units preserve the difference-set property
+            if(std::__gcd(u,m)!=1) continue;
             for(size_t i=0;i<D.size();i++) uD[i]=(u*D[i])%m;
             sort(uD.begin(),uD.end());
             long long c=arc_maxcov(uD,m,C,arcstart,alive);
             if(c>bcov){bcov=c;bu=u;}
         }
-        // report best unit (arc cov). t recovered later in Python for winners.
-        long long truecov=bcov, truet=-1;
-        long long k=6*m+truecov;
+        long long k=6*m+bcov;
         double ratio=16.0*(q+1)*(q+1)/(double)k;
-        printf("q=%lld m=%lld reqd=%.1f arc_cov=%lld true_cov=%lld u=%lld t=%lld k=%lld ratio=%.7f %s\n",
-               q,m,reqd,bcov,truecov,bu,truet,k,ratio, ratio<BASELINE?"*** BEATS 2.639 ***":"");
+        printf("q=%lld m=%lld reqd=%.1f bestcov=%lld u=%lld k=%lld ratio=%.7f %s\n",
+               q,m,reqd,bcov,bu,k,ratio, ratio<BASELINE?"*** BEATS 2.639 ***":"");
         fflush(stdout);
-        if(ratio<gbest){gbest=ratio;gq=q;gu=bu;gt=truet;gcov=truecov;}
+        if(ratio<gbest){gbest=ratio;gq=q;gu=bu;gcov=bcov;}
     }
-    printf("\nGLOBAL BEST: q=%lld u=%lld t=%lld cov=%lld ratio=%.7f (baseline %.4f) %s\n",
-           gq,gu,gt,gcov,gbest,BASELINE, gbest<BASELINE?"BEATS":"no beat");
+    printf("\nGLOBAL BEST: q=%lld u=%lld cov=%lld ratio=%.7f (baseline %.4f) %s\n",
+           gq,gu,gcov,gbest,BASELINE, gbest<BASELINE?"BEATS":"no beat");
     return 0;
 }
