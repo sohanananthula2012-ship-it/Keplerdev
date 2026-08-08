@@ -61,8 +61,29 @@ def run(T, tlimit, seed_rows, rngseed):
                 Temp *= 0.985
                 if Temp < 0.05:
                     Temp = 0.05
-            i = rng.randrange(N)
-            j = rng.randrange(1, NM)  # interior mark to move (1..5)
+            # choose mark to move: conflict-directed when cost is small
+            if cost <= 6 and rng.random() < 0.6:
+                # find a colliding difference and a mark involved in it
+                i = j = None
+                for _try in range(20):
+                    ii = rng.randrange(N)
+                    r2 = rows[ii]
+                    a = rng.randrange(NM)
+                    b = rng.randrange(NM)
+                    if a == b:
+                        continue
+                    d = abs(r2[a] - r2[b])
+                    if cnt[d] >= 2:
+                        cand = [x for x in (a, b) if x != 0]
+                        if cand:
+                            i, j = ii, rng.choice(cand)
+                            break
+                if i is None:
+                    i = rng.randrange(N)
+                    j = rng.randrange(1, NM)
+            else:
+                i = rng.randrange(N)
+                j = rng.randrange(1, NM)  # interior mark to move (1..5)
             row = rows[i]
             old = row[j]
             lo = row[j - 1] + 1
@@ -107,8 +128,9 @@ def run(T, tlimit, seed_rows, rngseed):
                 best_rows = [rr[:] for rr in rows]
                 if cost == 0:
                     return best_rows, best_cost, time.time() - t0
-            if stagn > 60000:
-                break  # restart
+            if stagn > 20000:
+                Temp = 1.5  # reheat to escape plateau
+                stagn = 0
         if cost == 0:
             return rows, 0, time.time() - t0
     return best_rows, best_cost, time.time() - t0
