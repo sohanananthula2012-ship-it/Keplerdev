@@ -84,6 +84,10 @@ int main(int argc,char**argv){
     vector<ll> arcstart(C+1); vector<char> alive(m); vector<ll> uD(D.size());
     ll bcov=0,bu=1;
     for(ll u=1;u<m;u++){ if(std::__gcd(u,m)!=1)continue;
+        // multiplier-orbit reduction: p is a multiplier (order 3e); skip non-minimal in orbit
+        bool minimal=true; ll w=(u*P)%m;
+        for(int j=1;j<3*E;j++){ if(w<u){minimal=false;break;} w=(w*P)%m; }
+        if(!minimal) continue;
         for(size_t i=0;i<D.size();i++) uD[i]=(u*D[i])%m; sort(uD.begin(),uD.end());
         ll c=arc_maxcov(uD,m,C,arcstart,alive); if(c>bcov){bcov=c;bu=u;} }
     ll k=6*m+bcov; double ratio=16.0*(Q+1)*(Q+1)/(double)k;
