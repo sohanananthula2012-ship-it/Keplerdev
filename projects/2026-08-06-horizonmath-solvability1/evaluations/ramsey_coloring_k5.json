@@ -1,0 +1,24 @@
+{
+  "problem_id": "ramsey_coloring_k5",
+  "problem_index": 86,
+  "problem_title": "ramsey_coloring_k5",
+  "valid": true,
+  "validator_message": "Valid 2-coloring of K_37 with no monochromatic K_5",
+  "validator_metrics": {
+    "num_vertices": 37,
+    "red_edges": 333,
+    "blue_edges": 333,
+    "total_edges": 666
+  },
+  "baseline_comparison": {
+    "result": "below_baseline",
+    "achieved_value": 37.0,
+    "baseline_value": 43.0,
+    "direction": "maximize",
+    "metric_name": "lower bound for Ramsey number R(5,5)",
+    "improvement_percent": -13.95,
+    "notes": null
+  },
+  "error_type": null,
+  "error_message": null
+}
