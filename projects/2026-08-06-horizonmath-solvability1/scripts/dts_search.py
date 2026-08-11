@@ -1,100 +1,77 @@
-import sys, time, random
+import time, random, json
 
-def solve(L, tbudget):
-    # place 7 rows, each [0,m1,m2,m3,m4,m5] increasing, marks in [0,L]
-    # all within-row pairwise differences globally distinct
+NR,NM=7,6
+def try_L(L, tbudget, seed):
+    rng=random.Random(seed)
     t0=time.time()
-    used=[False]*(L+1)   # difference values used
-    rows=[]
-    NR,NM=7,6
-    best=None
-    def row_diffs(marks):
-        d=[]
-        for a in range(len(marks)):
-            for b in range(a):
-                d.append(marks[a]-marks[b])
-        return d
-    def place_row(cur, prev_max):
-        # cur: list of marks so far in this row (starts [0])
-        if time.time()-t0>tbudget: raise TimeoutError
-        if len(cur)==NM:
-            return list(cur)
-        last=cur[-1]
-        need=NM-len(cur)
-        # remaining marks must fit; upper bound for next mark
-        for nxt in range(last+1, L-(need-1)+1):
-            # check diffs from nxt to all cur are free and mutually distinct
-            newd=[nxt-c for c in cur]
-            if len(set(newd))!=len(newd): 
-                pass
-            ok=True
-            for d in newd:
-                if used[d]: ok=False;break
-            if ok and len(set(newd))==len(newd):
-                for d in newd: used[d]=True
-                res=place_row(cur+[nxt], prev_max)
-                if res is not None: return res
-                for d in newd: used[d]=False
-        return None
-    def place_all(ri, prev_max):
-        if ri==NR:
-            return True
-        # symmetry: row max nonincreasing
-        r=place_row([0], prev_max)
-        # place_row doesn't respect prev_max cap; enforce via wrapper below
-        return None
-    # Simpler: recursive over rows, within enforce max <= prev_max
-    solution=[]
-    def rec_row(ri, cap):
-        if ri==NR: return True
-        # build a row with max <= cap
+    used=set()
+    sol=[]
+    def build_row(cap):
         cur=[0]
+        # randomized DFS within row
         def rr():
             if time.time()-t0>tbudget: raise TimeoutError
             if len(cur)==NM:
-                solution.append(list(cur))
-                if rec_row(ri+1, cur[-1]):
-                    return True
-                solution.pop()
-                return False
+                return True
             last=cur[-1]; need=NM-len(cur)
-            hi=cap if len(cur)==NM-1 else L
-            hi=min(hi, L-(need-1))
-            for nxt in range(last+1, hi+1):
+            hi=min(L-(need-1), cap)
+            cands=list(range(last+1,hi+1))
+            rng.shuffle(cands)
+            for nxt in cands:
                 newd=[nxt-c for c in cur]
                 if len(set(newd))!=len(newd): continue
-                ok=all(not used[d] for d in newd)
-                if not ok: continue
-                for d in newd: used[d]=True
+                if any(d in used for d in newd): continue
+                for d in newd: used.add(d)
                 cur.append(nxt)
                 if rr(): return True
                 cur.pop()
-                for d in newd: used[d]=False
+                for d in newd: used.discard(d)
             return False
-        return rr()
+        if rr(): return list(cur)
+        return None
+    def rec(ri, cap):
+        if ri==NR: return True
+        r=build_row(cap)
+        if r is None: return False
+        sol.append(r)
+        if rec(ri+1, r[-1]): return True
+        sol.pop()
+        for a in range(NM):
+            for b in range(a):
+                used.discard(r[a]-r[b])
+        return False
     try:
-        if rec_row(0, L):
-            return solution
+        if rec(0, L): return sol
     except TimeoutError:
         return None
     return None
 
+def verify(sol):
+    diffs=[]
+    for r in sol:
+        assert r[0]==0 and all(r[i]<r[i+1] for i in range(len(r)-1)) and len(r)==NM
+        for a in range(NM):
+            for b in range(a):
+                diffs.append(r[a]-r[b])
+    return len(diffs)==len(set(diffs)) and len(diffs)==105
+
 if __name__=="__main__":
-    for L in range(112, 200):
-        t0=time.time()
-        sol=solve(L, 25)
-        if sol:
-            mx=max(max(r) for r in sol)
-            # verify
-            diffs=[]
-            for r in sol:
-                for a in range(6):
-                    for b in range(a):
-                        diffs.append(r[a]-r[b])
-            assert len(diffs)==len(set(diffs)), "dup diffs"
-            print("FOUND scope",mx,"L",L,"time",round(time.time()-t0,1))
-            print(sol)
-            import json; json.dump(sol, open("/tmp/work/dts_sol.json","w"))
-            break
+    best=None
+    # find any solution first at generous L, then try to lower
+    for L in [220,200,180]:
+        found=None
+        for s in range(6):
+            sol=try_L(L, 35.0, s)
+            if sol and verify(sol):
+                found=sol; break
+        if found:
+            mx=max(max(r) for r in found)
+            print("scope",mx,"at L",L,flush=True)
+            best=found
+            json.dump(best,open("/tmp/work/dts_sol.json","w"))
         else:
-            print("L",L,"no sol in budget", round(time.time()-t0,1), flush=True)
+            print("L",L,"none",flush=True)
+            break
+    if best:
+        print("BEST scope", max(max(r) for r in best))
+        print(best)
