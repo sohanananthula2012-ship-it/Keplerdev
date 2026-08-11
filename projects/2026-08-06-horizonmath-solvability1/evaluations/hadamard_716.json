@@ -1,0 +1,9 @@
+{
+  "problem_id": "hadamard_716",
+  "problem_index": 95,
+  "problem_title": "hadamard_716",
+  "valid": false,
+  "validator_message": "AA^T + BB^T + CC^T + DD^T \u2260 716\u00b7I. Found 31862 incorrect entries. Example: position (0,1) has -4, expected 0",
+  "error_type": null,
+  "error_message": null
+}
