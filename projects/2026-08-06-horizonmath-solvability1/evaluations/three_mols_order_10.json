@@ -1,0 +1,9 @@
+{
+  "problem_id": "three_mols_order_10",
+  "problem_index": 93,
+  "problem_title": "three_mols_order_10",
+  "valid": false,
+  "validator_message": "Squares 1 and 2 are not orthogonal: Duplicate pair (5, 5) found",
+  "error_type": null,
+  "error_message": null
+}
