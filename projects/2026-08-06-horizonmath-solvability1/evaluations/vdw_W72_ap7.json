@@ -1,0 +1,21 @@
+{
+  "problem_id": "vdw_W72_ap7",
+  "problem_index": 80,
+  "problem_title": "vdw_W72_ap7",
+  "valid": true,
+  "validator_message": "Valid 2-coloring of {0,...,187} with no monochromatic 7-AP",
+  "validator_metrics": {
+    "length": 188
+  },
+  "baseline_comparison": {
+    "result": "below_baseline",
+    "achieved_value": 188.0,
+    "baseline_value": 3703.0,
+    "direction": "maximize",
+    "metric_name": "Length of valid 2-coloring avoiding monochromatic 7-term arithmetic progression",
+    "improvement_percent": -94.92,
+    "notes": null
+  },
+  "error_type": null,
+  "error_message": null
+}
