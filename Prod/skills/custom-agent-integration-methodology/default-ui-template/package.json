@@ -1,0 +1,35 @@
+{
+  "name": "builder-public-site-chat-template",
+  "private": true,
+  "version": "0.0.0-template",
+  "type": "module",
+  "sideEffects": [
+    "src/styles/*.css"
+  ],
+  "dependencies": {
+    "@enter-pro/agent-client": "0.0.2",
+    "@enter-pro/thread-client": "0.0.2",
+    "lucide-react": "^0.468.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.json",
+    "verify:question-core": "node scripts/verify-question-core.mjs",
+    "verify:ui": "node scripts/verify-ui.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "esbuild": "^0.25.0",
+    "playwright-core": "^1.61.0",
+    "typescript": "^5.7.2"
+  }
+}

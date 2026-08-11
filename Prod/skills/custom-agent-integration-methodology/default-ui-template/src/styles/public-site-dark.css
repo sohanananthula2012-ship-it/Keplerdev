@@ -1,0 +1,22 @@
+@import './public-site.css';
+
+.bps-shell {
+  --bps-bg: #101312;
+  --bps-bg-soft: #151a18;
+  --bps-popover: rgba(19, 24, 22, 0.9);
+  --bps-card: rgba(23, 29, 27, 0.72);
+  --bps-surface: rgba(255, 255, 255, 0.06);
+  --bps-surface-hover: rgba(255, 255, 255, 0.095);
+  --bps-user-bg: #303037;
+  --bps-user-text: #f7f8f8;
+  --bps-text: #f4f6f5;
+  --bps-text-strong: #ffffff;
+  --bps-muted: #a4abb3;
+  --bps-muted-2: #7f8790;
+  --bps-line: rgba(255, 255, 255, 0.13);
+  --bps-line-soft: rgba(255, 255, 255, 0.075);
+  --bps-danger: #ff8b7a;
+  --bps-warning: #f7c56b;
+  --bps-shadow: 0 18px 42px rgba(0, 0, 0, 0.26);
+  color-scheme: dark;
+}

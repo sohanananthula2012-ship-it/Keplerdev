@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-GitHub Repository Uploader Script
+GitHub Repository Uploader Script (Parallel Uploads)
 Uploads workspace files to a GitHub repository using the GitHub Git Data API.
 
 Usage:
@@ -14,6 +14,7 @@ import base64
 import argparse
 import urllib.request
 import urllib.error
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Files/folders to exclude from upload
 EXCLUDE_DIRS = {'.git', 'node_modules', 'dist', '.next', '.enter'}
@@ -41,7 +42,6 @@ def github_api_request(url, token, data=None, method='GET'):
 def get_workspace_files(workspace_root):
     file_paths = []
     for root, dirs, files in os.walk(workspace_root):
-        # Exclude directories
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         for f in files:
             if f in EXCLUDE_FILES:
@@ -50,6 +50,25 @@ def get_workspace_files(workspace_root):
             rel_path = os.path.relpath(full_path, workspace_root)
             file_paths.append((full_path, rel_path))
     return file_paths
+
+def upload_single_blob(base_url, token, full_path, rel_path):
+    with open(full_path, 'rb') as fp:
+        content = fp.read()
+    
+    encoded_content = base64.b64encode(content).decode('utf-8')
+    blob_res = github_api_request(
+        f'{base_url}/git/blobs',
+        token,
+        data={'content': encoded_content, 'encoding': 'base64'},
+        method='POST'
+    )
+    blob_sha = blob_res['sha']
+    return {
+        'path': rel_path.replace('\\', '/'),
+        'mode': '100644',
+        'type': 'blob',
+        'sha': blob_sha
+    }
 
 def push_to_github(repo, token, branch='main', commit_message='Update project files via Enter'):
     base_url = f'https://api.github.com/repos/{repo}'
@@ -68,27 +87,21 @@ def push_to_github(repo, token, branch='main', commit_message='Update project fi
     commit_info = github_api_request(f'{base_url}/git/commits/{latest_commit_sha}', token)
     base_tree_sha = commit_info['tree']['sha']
 
-    # 3. Create blobs for all files
+    # 3. Create blobs for all files in parallel
+    print("Uploading file blobs in parallel (12 workers)...")
     tree_items = []
-    for full_path, rel_path in files:
-        with open(full_path, 'rb') as fp:
-            content = fp.read()
-        
-        encoded_content = base64.b64encode(content).decode('utf-8')
-        blob_res = github_api_request(
-            f'{base_url}/git/blobs',
-            token,
-            data={'content': encoded_content, 'encoding': 'base64'},
-            method='POST'
-        )
-        blob_sha = blob_res['sha']
-        tree_items.append({
-            'path': rel_path.replace('\\', '/'),
-            'mode': '100644',
-            'type': 'blob',
-            'sha': blob_sha
-        })
-        print(f"  + Uploaded blob: {rel_path}")
+    completed_count = 0
+    with ThreadPoolExecutor(max_workers=12) as executor:
+        futures = {
+            executor.submit(upload_single_blob, base_url, token, full_path, rel_path): rel_path
+            for full_path, rel_path in files
+        }
+        for future in as_completed(futures):
+            item = future.result()
+            tree_items.append(item)
+            completed_count += 1
+            if completed_count % 20 == 0 or completed_count == len(files):
+                print(f"  Progress: {completed_count}/{len(files)} files uploaded...")
 
     # 4. Create new tree
     print("Creating new Git tree...")
@@ -129,7 +142,7 @@ def main():
     parser = argparse.ArgumentParser(description="Push project workspace to GitHub API")
     parser.add_argument("--repo", required=True, help="GitHub repository in 'owner/repo' format (e.g. 'octocat/Hello-World')")
     parser.add_argument("--branch", default="main", help="Target branch (default: 'main')")
-    parser.add_argument("--message", default="Sync project files from Enter", help="Commit message")
+    parser.add_argument("--message", default="Sync project files with Prod folder from Enter", help="Commit message")
     args = parser.parse_args()
 
     token = os.environ.get("GITHUB_TOKEN")
