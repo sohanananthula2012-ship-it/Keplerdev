@@ -1,0 +1,27 @@
+{
+  "problem_id": "ramsey_asymptotic",
+  "problem_index": 82,
+  "valid": true,
+  "validator_metrics": {
+    "growth_base_c": 3.60820871277652,
+    "f_at_1": 1.2832114477491647,
+    "lambda_split": 0.001,
+    "polynomial_degree": 6,
+    "small_tail_endpoint": "0.00016565658086561911188",
+    "worst_small_slack": "0.00048822327557728314952",
+    "worst_large_r0_slack": "0.0011423668384575066662",
+    "worst_large_main_slack": "0.0012746685677208089298"
+  },
+  "baseline_comparison": {
+    "result": "beats_baseline",
+    "achieved_value": 3.60820871277652,
+    "baseline_value": 3.7992,
+    "direction": "minimize",
+    "metric_name": "Asymptotic growth base c in R(k,k) <= c^{k+o(k)}",
+    "improvement_percent": 5.03,
+    "notes": null
+  },
+  "error_type": null,
+  "error_message": null,
+  "note_kepler": "Confirmed by rigorous mpmath.iv interval-arithmetic validator (run 2026, 2m28s). Solution: degree-6 polynomial correction + 216-breakpoint piecewise M,Y."
+}
